@@ -11,6 +11,7 @@ import Submit from './pages/Submit';
 import AdminDashboard from './pages/AdminDashboard';
 import Rounds from './pages/Rounds';
 import Winners from './pages/Winners';
+import Help from './pages/Help';
 
 import AuthCallback from './pages/AuthCallback';
 
@@ -27,6 +28,7 @@ function App() {
                         <Route path="problems" element={<ProblemStatements />} />
                         <Route path="rounds" element={<Rounds />} />
                         <Route path="winners" element={<Winners />} />
+                        <Route path="help" element={<Help />} />
 
                         <Route path="dashboard" element={
                             <ProtectedRoute>

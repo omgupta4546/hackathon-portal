@@ -9,6 +9,7 @@ const AdminDashboard = () => {
     const [problems, setProblems] = useState([]);
     const [rounds, setRounds] = useState([]);
     const [users, setUsers] = useState([]);
+    const [contacts, setContacts] = useState([]);
     const [instructions, setInstructions] = useState('');
     const [loading, setLoading] = useState(true);
     const [activeTab, setActiveTab] = useState('teams');
@@ -16,6 +17,7 @@ const AdminDashboard = () => {
     // Form States
     const [editingProblem, setEditingProblem] = useState(null);
     const [newProblem, setNewProblem] = useState({ title: '', category: 'Software', description: '', maxTeamSize: 4 });
+    const [newContact, setNewContact] = useState({ name: '', phone: '' });
     const [editingRound, setEditingRound] = useState(null);
 
     useEffect(() => {
@@ -24,19 +26,21 @@ const AdminDashboard = () => {
 
     const fetchData = async () => {
         try {
-            const [teamsRes, subsRes, probsRes, roundsRes, usersRes, instrRes] = await Promise.all([
+            const [teamsRes, subsRes, probsRes, roundsRes, usersRes, instrRes, contactsRes] = await Promise.all([
                 api.get('/admin/teams'),
                 api.get('/submissions'),
                 api.get('/problems'),
                 api.get('/rounds'),
                 api.get('/admin/users'),
-                api.get('/instructions')
+                api.get('/instructions'),
+                api.get('/contacts')
             ]);
             setTeams(teamsRes.data);
             setSubmissions(subsRes.data);
             setProblems(probsRes.data);
             setRounds(roundsRes.data);
             setUsers(usersRes.data);
+            setContacts(contactsRes.data);
             if (instrRes.data && instrRes.data.content) {
                 setInstructions(instrRes.data.content);
             }
@@ -128,6 +132,30 @@ const AdminDashboard = () => {
         }
     };
 
+    // --- Contact Actions ---
+    const handleAddContact = async (e) => {
+        e.preventDefault();
+        try {
+            await api.post('/contacts', newContact);
+            toast.success('Contact added');
+            setNewContact({ name: '', phone: '' });
+            fetchData();
+        } catch (err) {
+            toast.error('Failed to add contact');
+        }
+    };
+
+    const handleDeleteContact = async (id) => {
+        if (!window.confirm('Delete this contact?')) return;
+        try {
+            await api.delete(`/contacts/${id}`);
+            toast.success('Contact deleted');
+            fetchData();
+        } catch (err) {
+            toast.error('Failed to delete contact');
+        }
+    };
+
     if (loading) return <div className="p-8 text-center">Loading admin panel...</div>;
 
     return (
@@ -135,7 +163,7 @@ const AdminDashboard = () => {
             <h1 className="text-3xl font-bold text-white mb-8">Admin Dashboard</h1>
 
             <div className="flex space-x-4 mb-6 border-b border-slate-200 overflow-x-auto">
-                {['teams', 'submissions', 'problems', 'rounds', 'users', 'instructions'].map(tab => (
+                {['teams', 'submissions', 'problems', 'rounds', 'users', 'instructions', 'contacts'].map(tab => (
                     <button
                         key={tab}
                         className={`pb-2 px-4 font-medium capitalize whitespace-nowrap ${activeTab === tab ? 'text-primary border-b-2 border-primary' : 'text-slate-500'}`}
@@ -380,6 +408,34 @@ const AdminDashboard = () => {
                             <Save className="w-4 h-4 mr-2" /> Save Instructions
                         </button>
                     </form>
+                </div>
+            )}
+
+            {/* CONTACTS TAB */}
+            {activeTab === 'contacts' && (
+                <div className="space-y-8">
+                    {/* Add Contact */}
+                    <div className="card bg-blue-200">
+                        <h3 className="font-bold text-black text-lg mb-4 flex items-center"><Plus className="w-5 h-5 mr-2 text-black" /> Add New Contact</h3>
+                        <form onSubmit={handleAddContact} className="grid md:grid-cols-2 gap-4">
+                            <input type="text" placeholder="Name" className="input-field" value={newContact.name} onChange={e => setNewContact({ ...newContact, name: e.target.value })} required />
+                            <input type="text" placeholder="Phone Number" className="input-field" value={newContact.phone} onChange={e => setNewContact({ ...newContact, phone: e.target.value })} required />
+                            <button type="submit" className="btn-primary md:col-span-2">Add Contact</button>
+                        </form>
+                    </div>
+
+                    {/* List Contacts */}
+                    <div className="grid gap-4 md:grid-cols-2">
+                        {contacts.map(contact => (
+                            <div key={contact._id} className="card flex justify-between items-center">
+                                <div>
+                                    <h4 className="font-bold">{contact.name}</h4>
+                                    <p className="text-sm text-slate-600">{contact.phone}</p>
+                                </div>
+                                <button onClick={() => handleDeleteContact(contact._id)} className="text-red-500 hover:bg-red-50 p-2 rounded"><Trash2 className="w-5 h-5" /></button>
+                            </div>
+                        ))}
+                    </div>
                 </div>
             )}
         </div>
