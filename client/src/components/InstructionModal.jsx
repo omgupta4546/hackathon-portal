@@ -10,7 +10,7 @@ const InstructionModal = () => {
 
     useEffect(() => {
         const checkAndFetchInstructions = async () => {
-            const hasSeen = localStorage.getItem('hasSeenInstructions');
+            const hasSeen = sessionStorage.getItem('hasSeenInstructions');
             if (!hasSeen) {
                 try {
                     const { data } = await api.get('/instructions');
@@ -30,7 +30,7 @@ const InstructionModal = () => {
     }, []);
 
     const handleClose = () => {
-        localStorage.setItem('hasSeenInstructions', 'true');
+        sessionStorage.setItem('hasSeenInstructions', 'true');
         setIsOpen(false);
     };
 
