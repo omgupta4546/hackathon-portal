@@ -7,6 +7,7 @@ const submissionSchema = new mongoose.Schema({
         url: String,
         filename: String
     }],
+    driveLink: { type: String },
     githubLink: { type: String },
     description: { type: String },
     status: { type: String, enum: ['submitted', 'shortlisted', 'rejected'], default: 'submitted' },

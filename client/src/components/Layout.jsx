@@ -2,6 +2,7 @@ import { Outlet, useLocation } from 'react-router-dom';
 import Navbar from './Navbar';
 import { Toaster } from 'react-hot-toast';
 import { motion } from 'framer-motion';
+import InstructionModal from './InstructionModal';
 
 const Layout = () => {
     const location = useLocation();
@@ -38,6 +39,7 @@ const Layout = () => {
                     </div>
                 </footer>
                 <Toaster position="top-right" />
+                <InstructionModal />
             </div>
         </div>
     );

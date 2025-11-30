@@ -95,4 +95,23 @@ const getWinners = async (req, res) => {
     res.json(winners);
 };
 
-module.exports = { getAllTeams, deleteTeam, updateSubmissionStatus, setWinner, getWinners };
+const getAllUsers = async (req, res) => {
+    const users = await User.find({}).select('-passwordHash');
+    res.json(users);
+};
+
+const deleteUser = async (req, res) => {
+    const { id } = req.params;
+    try {
+        await User.findByIdAndDelete(id);
+        // Optional: Remove from teams if they are a member
+        // This is complex as it involves updating Team documents. 
+        // For now, we just delete the user.
+        res.json({ message: 'User removed' });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Error deleting user' });
+    }
+};
+
+module.exports = { getAllTeams, deleteTeam, updateSubmissionStatus, setWinner, getWinners, getAllUsers, deleteUser };

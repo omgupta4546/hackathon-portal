@@ -9,7 +9,7 @@ const Submit = () => {
     const navigate = useNavigate();
     const [description, setDescription] = useState('');
     const [githubLink, setGithubLink] = useState('');
-    const [files, setFiles] = useState([]);
+    const [driveLink, setDriveLink] = useState('');
     const [uploading, setUploading] = useState(false);
     const [existingSubmission, setExistingSubmission] = useState(null);
 
@@ -27,30 +27,16 @@ const Submit = () => {
         checkSubmission();
     }, [roundId]);
 
-    const handleFileChange = (e) => {
-        setFiles(e.target.files);
-    };
-
     const handleSubmit = async (e) => {
         e.preventDefault();
-        if (files.length === 0) {
-            return toast.error('Please upload a file');
-        }
-
-        const formData = new FormData();
-        formData.append('roundId', roundId || 'round1');
-        formData.append('description', description);
-        formData.append('githubLink', githubLink);
-        for (let i = 0; i < files.length; i++) {
-            formData.append('files', files[i]);
-        }
 
         setUploading(true);
         try {
-            await api.post('/submissions', formData, {
-                headers: {
-                    'Content-Type': 'multipart/form-data',
-                },
+            await api.post('/submissions', {
+                roundId: roundId || 'round1',
+                description,
+                githubLink,
+                driveLink
             });
             toast.success('Submitted successfully!');
             navigate('/dashboard');
@@ -112,24 +98,17 @@ const Submit = () => {
 
                     <div>
                         <label className="block text-sm font-medium text-white mb-1 flex items-center">
-                            <FileText className="w-4 h-4 mr-1" /> Presentation (PDF/PPTX)
+                            <FileText className="w-4 h-4 mr-1" /> Google Drive Link (PDF/PPT)
                         </label>
-                        <div className="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-slate-300 border-dashed rounded-md hover:bg-slate-50 transition-colors">
-                            <div className="space-y-1 text-center">
-                                <Upload className="mx-auto h-12 w-12 text-slate-400" />
-                                <div className="flex text-sm text-slate-600">
-                                    <label htmlFor="file-upload" className="relative cursor-pointer bg-white rounded-md font-medium text-primary hover:text-blue-500 focus-within:outline-none">
-                                        <span>Upload a file</span>
-                                        <input id="file-upload" name="file-upload" type="file" className="sr-only" onChange={handleFileChange} accept=".pdf,.pptx,.ppt,.doc,.docx" />
-                                    </label>
-                                    <p className="pl-1">or drag and drop</p>
-                                </div>
-                                <p className="text-xs text-slate-500">PDF, PPTX up to 10MB</p>
-                                {files.length > 0 && (
-                                    <p className="text-sm text-green-600 font-medium mt-2">{files[0].name}</p>
-                                )}
-                            </div>
-                        </div>
+                        <input
+                            type="url"
+                            className="input-field"
+                            placeholder="Paste your public Google Drive link here..."
+                            value={driveLink}
+                            onChange={(e) => setDriveLink(e.target.value)}
+                            required
+                        />
+                        <p className="text-xs text-slate-400 mt-1">Make sure the link is set to "Anyone with the link can view"</p>
                     </div>
 
                     <button

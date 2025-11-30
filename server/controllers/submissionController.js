@@ -2,7 +2,7 @@ const Submission = require('../models/Submission');
 const Team = require('../models/Team');
 
 const submitWork = async (req, res) => {
-    const { roundId, description, githubLink } = req.body;
+    const { roundId, description, githubLink, driveLink } = req.body;
     const userId = req.user._id;
 
     const team = await Team.findOne({ 'members.userId': userId });
@@ -14,17 +14,13 @@ const submitWork = async (req, res) => {
         return res.status(401).json({ message: 'Only team leader can submit' });
     }
 
-    const files = req.files.map(file => ({
-        url: file.path, // Cloudinary returns the full URL in path
-        filename: file.originalname
-    }));
-
     const submission = await Submission.create({
         teamId: team._id,
         roundId,
         description,
         githubLink,
-        files
+        driveLink,
+        files: []
     });
 
     res.status(201).json(submission);

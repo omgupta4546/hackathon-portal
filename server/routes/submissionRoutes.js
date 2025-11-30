@@ -4,7 +4,7 @@ const { submitWork, getSubmissions } = require('../controllers/submissionControl
 const { protect } = require('../middleware/authMiddleware');
 const upload = require('../middleware/uploadMiddleware');
 
-router.post('/', protect, upload.array('files', 3), submitWork);
+router.post('/', protect, submitWork);
 router.get('/', protect, getSubmissions);
 
 module.exports = router;

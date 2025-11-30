@@ -83,7 +83,7 @@ const Signup = () => {
                                 type="text"
                                 required
                                 className="input-field"
-                                placeholder="Roll Number"
+                                placeholder="College roll no. 2X/abc"
                                 value={rollNumber}
                                 onChange={(e) => setRollNumber(e.target.value)}
                             />
@@ -96,7 +96,7 @@ const Signup = () => {
                                 type="text"
                                 required
                                 className="input-field"
-                                placeholder="Branch (e.g. CSE, ECE)"
+                                placeholder="Branch"
                                 value={branch}
                                 onChange={(e) => setBranch(e.target.value)}
                             />
