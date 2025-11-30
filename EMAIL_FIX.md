@@ -24,4 +24,20 @@ Once deployed and the variable is updated:
 2.  The email should now send successfully!
 
 ---
-**Why this works:** Port 465 uses SSL encryption from the start, which bypasses some of the network blocks that affect port 587 (STARTTLS).
+---
+
+## 4. STILL NOT WORKING? Check your Password!
+If you are using your **regular Gmail password**, it will **FAIL**.
+You MUST use a **Google App Password**.
+
+### How to get an App Password:
+1.  Go to your **Google Account Settings** -> **Security**.
+2.  Enable **2-Step Verification** (if not already on).
+3.  Search for **"App Passwords"** in the search bar at the top.
+4.  Create a new app password (name it "Render").
+5.  Copy the 16-character code (e.g., `abcd efgh ijkl mnop`).
+6.  Go to **Render Dashboard** -> **Environment**.
+7.  Update `SMTP_PASS` with this code (spaces don't matter, my code handles them).
+8.  **Save Changes**.
+
+**This is the #1 reason for email failures.**

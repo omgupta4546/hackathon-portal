@@ -9,6 +9,7 @@ console.log('Environment Variables Loaded. SMTP_HOST:', process.env.SMTP_HOST);
 connectDB();
 
 const app = express();
+app.enable('trust proxy'); // Required for Render/Heroku to correctly detect HTTPS
 
 // Handle CORS - remove trailing slash if present
 const clientUrl = (process.env.CLIENT_URL || '*').replace(/\/$/, '');
