@@ -173,7 +173,16 @@ const AdminDashboard = () => {
                                     <td className="px-6 py-4 whitespace-nowrap text-sm text-red-500">{sub.roundId}</td>
                                     <td className="px-6 py-4 whitespace-nowrap text-sm text-blue-600">
                                         {sub.githubLink && <a href={sub.githubLink} target="_blank" rel="noreferrer" className="hover:underline mr-2">GitHub</a>}
-                                        {sub.files.length > 0 && <a href={`${BASE_URL}${sub.files[0].url}`} target="_blank" rel="noreferrer" className="hover:underline flex items-center inline-flex"><Download className="w-3 h-3 mr-1" /> File</a>}
+                                        {sub.files.length > 0 && (
+                                            <a
+                                                href={sub.files[0].url.startsWith('http') ? sub.files[0].url : `${BASE_URL}${sub.files[0].url}`}
+                                                target="_blank"
+                                                rel="noreferrer"
+                                                className="hover:underline flex items-center inline-flex"
+                                            >
+                                                <Download className="w-3 h-3 mr-1" /> File
+                                            </a>
+                                        )}
                                     </td>
                                     <td className="px-6 py-4 whitespace-nowrap">
                                         <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${sub.status === 'shortlisted' ? 'bg-green-100 text-green-800' :
