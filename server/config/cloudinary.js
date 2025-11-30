@@ -12,10 +12,17 @@ cloudinary.config({
 
 const storage = new CloudinaryStorage({
     cloudinary: cloudinary,
-    params: {
-        folder: 'hackathon_submissions',
-        allowed_formats: ['jpg', 'png', 'pdf', 'doc', 'docx', 'pptx'],
-        resource_type: 'auto' // Detects image vs raw (pdf/doc)
+    params: async (req, file) => {
+        // Force raw for PDFs and documents to prevent corruption/preview errors
+        const isRaw = file.mimetype.includes('pdf') ||
+            file.mimetype.includes('document') ||
+            file.mimetype.includes('presentation');
+
+        return {
+            folder: 'hackathon_submissions',
+            allowed_formats: ['jpg', 'png', 'pdf', 'doc', 'docx', 'pptx'],
+            resource_type: isRaw ? 'raw' : 'auto'
+        };
     }
 });
 
