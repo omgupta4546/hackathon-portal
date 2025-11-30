@@ -1,8 +1,10 @@
 import { Link } from 'react-router-dom';
 import { ArrowRight, Code, Cpu, Users, Zap, Trophy } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { useAuth } from '../context/AuthContext';
 
 const Landing = () => {
+    const { user } = useAuth();
     return (
         <div className="bg-transparent">
             {/* Hero Section */}
@@ -25,9 +27,15 @@ const Landing = () => {
                                 </p>
                                 <div className="mt-5 sm:mt-8 sm:flex sm:justify-center lg:justify-start">
                                     <div className="rounded-md shadow">
-                                        <Link to="/signup" className="w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-white bg-primary hover:bg-primary/90 md:py-4 md:text-lg">
-                                            Register Now
-                                        </Link>
+                                        {user ? (
+                                            <Link to={user.role === 'admin' ? "/admin" : "/dashboard"} className="w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-white bg-primary hover:bg-primary/90 md:py-4 md:text-lg">
+                                                Go to Dashboard
+                                            </Link>
+                                        ) : (
+                                            <Link to="/signup" className="w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-white bg-primary hover:bg-primary/90 md:py-4 md:text-lg">
+                                                Register Now
+                                            </Link>
+                                        )}
                                     </div>
                                     <div className="mt-3 sm:mt-0 sm:ml-3">
                                         <Link to="/problems" className="w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-primary bg-primary/10 hover:bg-primary/20 md:py-4 md:text-lg">
