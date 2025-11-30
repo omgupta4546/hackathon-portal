@@ -10,8 +10,10 @@ connectDB();
 
 const app = express();
 
+// Handle CORS - remove trailing slash if present
+const clientUrl = (process.env.CLIENT_URL || '*').replace(/\/$/, '');
 app.use(cors({
-    origin: process.env.CLIENT_URL || '*',
+    origin: clientUrl,
     credentials: true
 }));
 app.use(express.json());
