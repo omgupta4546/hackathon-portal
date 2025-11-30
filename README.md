@@ -1,97 +1,90 @@
-# Robotics x DSC Internal Hackathon Portal
+# Robotics Club Hackathon Portal
 
-A full-stack MERN application for managing internal hackathons.
+A comprehensive web portal for managing the internal hackathon of the Robotics Club. This platform facilitates team registration, problem statement selection, submission management, and admin oversight.
 
 ## Features
 
-- **User Roles**: Participants (Team Leaders/Members) and Admins.
-- **Team Management**: Create teams, invite members via code, join teams.
-- **Problem Statements**: View and select problem statements (Hardware/Software).
-- **Submissions**: File upload (PDF/PPTX) and GitHub link submission for rounds.
-- **Admin Dashboard**: View all teams, manage submissions (shortlist/reject), upload scores.
-- **Responsive UI**: Built with React + Tailwind CSS.
+### 🚀 Landing Page
+-   **Dynamic Animations**: Floating rocket animation (exclusive to the home page).
+-   **Responsive Design**: Optimized for both laptop and mobile devices.
+-   **Feature Showcase**: Highlights key aspects of the hackathon.
+
+### 👥 Participant Portal
+-   **Team Formation**: Users can create teams of up to 4 members.
+-   **Problem Selection**: Browse and select problem statements from Hardware, Software, or Both categories.
+-   **Dashboard**: View team status, selected problem, and submission details.
+-   **Submission**: Submit project links (GitHub) and files.
+
+### 🛡️ Admin Dashboard
+-   **Overview**: View all teams, submissions, and problems.
+-   **Problem Management**: Create, edit, and delete problem statements.
+    -   Categories: Hardware, Software, Both.
+-   **Submission Tracking**: Shortlist or reject submissions.
+-   **Round Management**: Manage hackathon rounds and timelines.
 
 ## Tech Stack
 
-- **Frontend**: React, Vite, Tailwind CSS, Axios, React Router v6
-- **Backend**: Node.js, Express, MongoDB (Mongoose)
-- **Authentication**: JWT (JSON Web Tokens)
-- **File Storage**: Local disk storage (Multer) - *Ready for S3 migration*
+-   **Frontend**: React, Tailwind CSS, Framer Motion, Lucide React
+-   **Backend**: Node.js, Express.js
+-   **Database**: MongoDB
+-   **Authentication**: JWT, Google OAuth (Passport.js)
+-   **Email**: Nodemailer (Gmail SMTP)
 
-## Prerequisites
+## Getting Started
 
-- Node.js (v14+)
-- MongoDB (Local or Atlas)
+### Prerequisites
+-   Node.js installed
+-   MongoDB URI
+-   Google OAuth Credentials
 
-## Quick Start (Local Development)
+### Installation
 
 1.  **Clone the repository**
-
-2.  **Setup Backend**
-
     ```bash
+    git clone <repository-url>
+    cd hackathon-portal
+    ```
+
+2.  **Install Dependencies**
+    ```bash
+    # Install server dependencies
     cd server
     npm install
-    
-    # Create .env file
-    cp .env.example .env
-    # Edit .env if needed (default connects to local mongo)
 
-    # Seed Database (Creates Admin User & Problem Statements)
-    npm run seed
-
-    # Start Server
-    npm run dev
-    ```
-
-    *Server runs on http://localhost:5000*
-
-    **Default Admin Credentials:**
-    - Email: `admin@hack.local`
-    - Password: `AdminPass123`
-
-3.  **Setup Frontend**
-
-    ```bash
-    cd client
+    # Install client dependencies
+    cd ../client
     npm install
+    ```
+
+3.  **Environment Setup**
+    -   Create a `.env` file in the `server` directory with the following:
+        ```env
+        PORT=5000
+        MONGO_URI=your_mongodb_uri
+        JWT_SECRET=your_jwt_secret
+        CLIENT_URL=http://localhost:5173
+        GOOGLE_CLIENT_ID=your_google_client_id
+        GOOGLE_CLIENT_SECRET=your_google_client_secret
+        SMTP_HOST=smtp.gmail.com
+        SMTP_PORT=587
+        SMTP_USER=your_email@gmail.com
+        SMTP_PASS=your_app_password
+        ```
+
+4.  **Run the Application**
+    ```bash
+    # Run server (from server directory)
+    npm run dev
+
+    # Run client (from client directory)
     npm run dev
     ```
 
-    *Client runs on http://localhost:5173*
-
-## Deployment
-
-### Backend (Render/Railway)
-
-1.  Push `server` folder to a git repo.
-2.  Set environment variables in the dashboard:
-    - `MONGO_URI`: Your MongoDB Atlas connection string.
-    - `JWT_SECRET`: A strong secret key.
-    - `NODE_ENV`: `production`
-3.  Build Command: `npm install`
-4.  Start Command: `npm start`
-
-### Frontend (Vercel)
-
-1.  Push `client` folder to a git repo.
-2.  Import project in Vercel.
-3.  Build Command: `npm run build`
-4.  Output Directory: `dist`
-5.  **Important**: Update `src/utils/api.js` base URL to your deployed backend URL if not using a proxy.
-
-## API Documentation
-
-Import the provided Postman collection to test API endpoints.
-
-### Key Endpoints
-
-- `POST /api/auth/signup` - Register
-- `POST /api/auth/login` - Login
-- `POST /api/teams` - Create Team
-- `GET /api/problems` - Get Problem Statements
-- `POST /api/submissions` - Submit Project
+## Admin Access
+To promote a user to admin, run the following command in the `server` directory:
+```bash
+node makeAdmin.js user@example.com
+```
 
 ## License
-
-MIT
+This project is licensed under the MIT License.
