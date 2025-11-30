@@ -33,6 +33,9 @@ This guide explains how to deploy your MERN stack application for free using **R
     *   `SMTP_PASS`: Your App Password (from your local `.env`).
     *   `GOOGLE_CLIENT_ID`: Your Google Client ID (from your local `.env`).
     *   `GOOGLE_CLIENT_SECRET`: Your Google Client Secret (from your local `.env`).
+    *   `CLOUDINARY_CLOUD_NAME`: Your Cloudinary Cloud Name.
+    *   `CLOUDINARY_API_KEY`: Your Cloudinary API Key.
+    *   `CLOUDINARY_API_SECRET`: Your Cloudinary API Secret.
 6.  **Deploy**: Click **"Create Web Service"**.
 7.  **Copy URL**: Once deployed, copy the URL (e.g., `https://hackathon-portal-api.onrender.com`). This is your **Backend URL**.
 

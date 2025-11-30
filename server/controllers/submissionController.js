@@ -15,7 +15,7 @@ const submitWork = async (req, res) => {
     }
 
     const files = req.files.map(file => ({
-        url: `/uploads/${file.filename}`,
+        url: file.path, // Cloudinary returns the full URL in path
         filename: file.originalname
     }));
 
