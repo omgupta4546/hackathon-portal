@@ -26,26 +26,37 @@ const AdminDashboard = () => {
 
     const fetchData = async () => {
         try {
-            const [teamsRes, subsRes, probsRes, roundsRes, usersRes, instrRes, contactsRes] = await Promise.all([
+            // Fetch core admin data
+            const [teamsRes, subsRes, probsRes, roundsRes, usersRes, instrRes] = await Promise.all([
                 api.get('/admin/teams'),
                 api.get('/submissions'),
                 api.get('/problems'),
                 api.get('/rounds'),
                 api.get('/admin/users'),
-                api.get('/instructions'),
-                api.get('/contacts')
+                api.get('/instructions')
             ]);
+
             setTeams(teamsRes.data);
             setSubmissions(subsRes.data);
             setProblems(probsRes.data);
             setRounds(roundsRes.data);
             setUsers(usersRes.data);
-            setContacts(contactsRes.data);
             if (instrRes.data && instrRes.data.content) {
                 setInstructions(instrRes.data.content);
             }
+
+            // Fetch contacts separately to isolate errors
+            try {
+                const contactsRes = await api.get('/contacts');
+                setContacts(contactsRes.data);
+            } catch (contactError) {
+                console.error('Failed to load contacts:', contactError);
+                toast.error('Failed to load contacts');
+            }
+
         } catch (error) {
-            toast.error('Failed to load admin data');
+            console.error('Admin data load error:', error);
+            toast.error('Failed to load admin data: ' + (error.response?.data?.message || error.message));
         } finally {
             setLoading(false);
         }

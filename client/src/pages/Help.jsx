@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Phone, User } from 'lucide-react';
-import axios from 'axios';
+import api from '../utils/api';
 
 const Help = () => {
     const [coordinators, setCoordinators] = useState([]);
@@ -10,7 +10,7 @@ const Help = () => {
     useEffect(() => {
         const fetchContacts = async () => {
             try {
-                const { data } = await axios.get('http://localhost:5000/api/contacts');
+                const { data } = await api.get('/contacts');
                 setCoordinators(data);
             } catch (err) {
                 setError('Failed to load contact information');
