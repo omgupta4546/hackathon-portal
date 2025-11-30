@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import api from '../utils/api';
+import api, { BASE_URL } from '../utils/api';
 import toast from 'react-hot-toast';
 import { Download, Check, X, Trash2, Edit, Plus, Save } from 'lucide-react';
 
@@ -173,7 +173,7 @@ const AdminDashboard = () => {
                                     <td className="px-6 py-4 whitespace-nowrap text-sm text-red-500">{sub.roundId}</td>
                                     <td className="px-6 py-4 whitespace-nowrap text-sm text-blue-600">
                                         {sub.githubLink && <a href={sub.githubLink} target="_blank" rel="noreferrer" className="hover:underline mr-2">GitHub</a>}
-                                        {sub.files.length > 0 && <a href={`http://localhost:5000${sub.files[0].url}`} target="_blank" rel="noreferrer" className="hover:underline flex items-center inline-flex"><Download className="w-3 h-3 mr-1" /> File</a>}
+                                        {sub.files.length > 0 && <a href={`${BASE_URL}${sub.files[0].url}`} target="_blank" rel="noreferrer" className="hover:underline flex items-center inline-flex"><Download className="w-3 h-3 mr-1" /> File</a>}
                                     </td>
                                     <td className="px-6 py-4 whitespace-nowrap">
                                         <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${sub.status === 'shortlisted' ? 'bg-green-100 text-green-800' :

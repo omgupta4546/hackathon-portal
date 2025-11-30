@@ -57,9 +57,11 @@ const googleCallback = async (req, res) => {
     try {
         const token = generateToken(req.user._id);
         // Redirect to client with token
-        res.redirect(`http://localhost:5173/auth/callback?token=${token}`);
+        const clientUrl = process.env.CLIENT_URL || 'http://localhost:5173';
+        res.redirect(`${clientUrl}/auth/callback?token=${token}`);
     } catch (error) {
-        res.redirect('http://localhost:5173/login?error=GoogleAuthFailed');
+        const clientUrl = process.env.CLIENT_URL || 'http://localhost:5173';
+        res.redirect(`${clientUrl}/login?error=GoogleAuthFailed`);
     }
 };
 

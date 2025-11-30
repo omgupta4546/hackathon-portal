@@ -39,7 +39,7 @@ This guide explains how to deploy your MERN stack application for free using **R
 6.  **Deploy**: Click **"Create Web Service"**.
 7.  **Copy URL**: Once deployed, copy the URL (e.g., `https://hackathon-portal-api.onrender.com`). This is your **Backend URL**.
 
-> **⚠️ Important Note on File Uploads**: On the free tier of Render, files uploaded to the server (like resumes) will disappear if the server restarts. For a production app, you should use a service like AWS S3 or Cloudinary.
+> **✅ File Uploads Configured**: We have integrated **Cloudinary** for file storage. Files uploaded by users will be safely stored in the cloud and will persist even if the Render server restarts.
 
 ---
 
