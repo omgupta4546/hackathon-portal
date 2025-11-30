@@ -2,9 +2,9 @@ const mongoose = require('mongoose');
 
 const problemSchema = new mongoose.Schema({
     title: { type: String, required: true },
-    category: { type: String, enum: ['Hardware', 'Software'], required: true },
+    category: { type: String, enum: ['Hardware', 'Software', 'Both'], required: true },
     description: { type: String, required: true },
-    difficulty: { type: String, enum: ['Easy', 'Medium', 'Hard'], default: 'Medium' },
+    description: { type: String, required: true },
     maxTeamSize: { type: Number, default: 4 }
 }, { timestamps: true });
 

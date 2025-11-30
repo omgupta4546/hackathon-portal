@@ -99,15 +99,14 @@ const Submit = () => {
 
                     <div>
                         <label className="block text-sm font-medium text-white mb-1 flex items-center">
-                            <Github className="w-4 h-4 mr-1" /> GitHub Repository Link
+                            <Github className="w-4 h-4 mr-1" /> Prototype Link <span className="text-slate-400 text-xs ml-2">(Optional)</span>
                         </label>
                         <input
                             type="url"
                             className="input-field"
-                            placeholder="https://github.com/username/repo"
+                            placeholder="Link to your prototype (e.g., Figma, GitHub, Website)"
                             value={githubLink}
                             onChange={(e) => setGithubLink(e.target.value)}
-                            required
                         />
                     </div>
 

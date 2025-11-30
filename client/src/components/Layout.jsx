@@ -1,27 +1,30 @@
-import { Outlet } from 'react-router-dom';
+import { Outlet, useLocation } from 'react-router-dom';
 import Navbar from './Navbar';
 import { Toaster } from 'react-hot-toast';
 import { motion } from 'framer-motion';
 
 const Layout = () => {
+    const location = useLocation();
     return (
         <div className="min-h-screen flex flex-col bg-slate-950 relative overflow-hidden">
-            {/* Flying Rocket Animation */}
-            <motion.div
-                className="absolute text-6xl z-0 pointer-events-none"
-                initial={{ x: -100, y: '50vh' }}
-                animate={{
-                    x: ['0vw', '110vw'],
-                    y: ['50vh', '20vh', '70vh', '30vh']
-                }}
-                transition={{
-                    duration: 15,
-                    repeat: Infinity,
-                    ease: 'linear'
-                }}
-            >
-                🚀
-            </motion.div>
+            {/* Flying Rocket Animation - Only on Landing Page */}
+            {location.pathname === '/' && (
+                <motion.div
+                    className="absolute text-6xl z-0 pointer-events-none"
+                    initial={{ x: -100, y: '50vh' }}
+                    animate={{
+                        x: ['0vw', '110vw'],
+                        y: ['50vh', '20vh', '70vh', '30vh']
+                    }}
+                    transition={{
+                        duration: 15,
+                        repeat: Infinity,
+                        ease: 'linear'
+                    }}
+                >
+                    🚀
+                </motion.div>
+            )}
 
             {/* Main Content */}
             <div className="relative z-10 min-h-screen flex flex-col">

@@ -13,7 +13,7 @@ const AdminDashboard = () => {
 
     // Form States
     const [editingProblem, setEditingProblem] = useState(null);
-    const [newProblem, setNewProblem] = useState({ title: '', category: 'Software', description: '', difficulty: 'Medium', maxTeamSize: 4 });
+    const [newProblem, setNewProblem] = useState({ title: '', category: 'Software', description: '', maxTeamSize: 4 });
     const [editingRound, setEditingRound] = useState(null);
 
     useEffect(() => {
@@ -68,7 +68,7 @@ const AdminDashboard = () => {
         try {
             await api.post('/problems', newProblem);
             toast.success('Problem created');
-            setNewProblem({ title: '', category: 'Software', description: '', difficulty: 'Medium', maxTeamSize: 4 });
+            setNewProblem({ title: '', category: 'Software', description: '', maxTeamSize: 4 });
             fetchData();
         } catch (err) {
             toast.error('Failed to create problem');
@@ -205,13 +205,9 @@ const AdminDashboard = () => {
                             <select className="input-field" value={newProblem.category} onChange={e => setNewProblem({ ...newProblem, category: e.target.value })}>
                                 <option value="Software">Software</option>
                                 <option value="Hardware">Hardware</option>
+                                <option value="Both">Both</option>
                             </select>
                             <textarea placeholder="Description" className="input-field md:col-span-2" value={newProblem.description} onChange={e => setNewProblem({ ...newProblem, description: e.target.value })} required />
-                            <select className="input-field" value={newProblem.difficulty} onChange={e => setNewProblem({ ...newProblem, difficulty: e.target.value })}>
-                                <option value="Easy">Easy</option>
-                                <option value="Medium">Medium</option>
-                                <option value="Hard">Hard</option>
-                            </select>
                             <button type="submit" className="btn-primary">Create Problem</button>
                         </form>
                     </div>
@@ -222,7 +218,7 @@ const AdminDashboard = () => {
                             <div key={p._id} className="card flex justify-between items-center">
                                 <div>
                                     <h4 className="font-bold">{p.title}</h4>
-                                    <p className="text-sm text-red-500">{p.category} • {p.difficulty}</p>
+                                    <p className="text-sm text-red-500">{p.category}</p>
                                 </div>
                                 <button onClick={() => handleDeleteProblem(p._id)} className="text-red-500 hover:bg-red-50 p-2 rounded"><Trash2 className="w-5 h-5" /></button>
                             </div>

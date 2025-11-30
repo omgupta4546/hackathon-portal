@@ -63,6 +63,7 @@ const ProblemStatements = () => {
                         <option value="All">All Categories</option>
                         <option value="Hardware">Hardware</option>
                         <option value="Software">Software</option>
+                        <option value="Both">Both</option>
                     </select>
                 </div>
             </div>
@@ -71,15 +72,12 @@ const ProblemStatements = () => {
                 {filteredProblems.map((problem) => (
                     <div key={problem._id} className="card hover:shadow-md transition-shadow flex flex-col">
                         <div className="flex justify-between items-start mb-2">
-                            <span className={`px-2 py-1 rounded text-xs font-bold ${problem.category === 'Hardware' ? 'bg-orange-100 text-orange-800' : 'bg-blue-100 text-blue-800'
+                            <span className={`px-2 py-1 rounded text-xs font-bold ${problem.category === 'Hardware' ? 'bg-orange-100 text-orange-800' :
+                                problem.category === 'Software' ? 'bg-blue-100 text-blue-800' : 'bg-purple-100 text-purple-800'
                                 }`}>
                                 {problem.category}
                             </span>
-                            <span className={`px-2 py-1 rounded text-xs font-bold ${problem.difficulty === 'Easy' ? 'bg-green-100 text-green-800' :
-                                problem.difficulty === 'Medium' ? 'bg-yellow-100 text-yellow-800' : 'bg-red-100 text-red-800'
-                                }`}>
-                                {problem.difficulty}
-                            </span>
+
                         </div>
                         <h3 className="text-xl font-bold text-slate-100 mb-2">{problem.title}</h3>
                         <p className="text-slate-300 text-sm mb-4 flex-grow">{problem.description}</p>
