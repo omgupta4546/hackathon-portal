@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Phone, User } from 'lucide-react';
 import api from '../utils/api';
+import LoadingSpinner from '../components/LoadingSpinner';
 
 const Help = () => {
     const [coordinators, setCoordinators] = useState([]);
@@ -24,11 +25,7 @@ const Help = () => {
     }, []);
 
     if (loading) {
-        return (
-            <div className="min-h-screen bg-slate-900 flex items-center justify-center">
-                <div className="text-white">Loading...</div>
-            </div>
-        );
+        return <LoadingSpinner />;
     }
 
     if (error) {

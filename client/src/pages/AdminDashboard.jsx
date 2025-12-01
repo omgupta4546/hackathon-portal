@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import api, { BASE_URL } from '../utils/api';
 import toast from 'react-hot-toast';
 import { Download, Check, X, Trash2, Edit, Plus, Save, FileText, Info } from 'lucide-react';
+import LoadingSpinner from '../components/LoadingSpinner';
 
 const AdminDashboard = () => {
     const [teams, setTeams] = useState([]);
@@ -167,7 +168,7 @@ const AdminDashboard = () => {
         }
     };
 
-    if (loading) return <div className="p-8 text-center">Loading admin panel...</div>;
+    if (loading) return <LoadingSpinner />;
 
     return (
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">

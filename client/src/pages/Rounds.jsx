@@ -4,6 +4,7 @@ import { useAuth } from '../context/AuthContext';
 import { CheckCircle, Clock, XCircle, Calendar, Lock, Trophy } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
+import LoadingSpinner from '../components/LoadingSpinner';
 
 const Rounds = () => {
     const [rounds, setRounds] = useState([]);
@@ -73,7 +74,7 @@ const Rounds = () => {
         return { state: 'locked', label: 'Locked', color: 'border-l-slate-300' };
     };
 
-    if (loading) return <div className="p-8 text-center">Loading rounds...</div>;
+    if (loading) return <LoadingSpinner />;
 
     return (
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">

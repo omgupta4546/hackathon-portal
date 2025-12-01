@@ -4,6 +4,7 @@ import api from '../utils/api';
 import { useAuth } from '../context/AuthContext';
 import { Users, Code, CheckCircle, Clock, AlertCircle } from 'lucide-react';
 import toast from 'react-hot-toast';
+import LoadingSpinner from '../components/LoadingSpinner';
 
 const Dashboard = () => {
     const { user } = useAuth();
@@ -60,7 +61,7 @@ const Dashboard = () => {
         }
     }
 
-    if (loading) return <div className="p-8 text-center">Loading dashboard...</div>;
+    if (loading) return <LoadingSpinner />;
 
     return (
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">

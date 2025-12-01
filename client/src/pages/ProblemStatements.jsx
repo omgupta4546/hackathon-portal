@@ -3,6 +3,7 @@ import api from '../utils/api';
 import { useAuth } from '../context/AuthContext';
 import toast from 'react-hot-toast';
 import { Filter, Lock } from 'lucide-react';
+import LoadingSpinner from '../components/LoadingSpinner';
 
 const ProblemStatements = () => {
     const [problems, setProblems] = useState([]);
@@ -46,7 +47,7 @@ const ProblemStatements = () => {
         ? problems
         : problems.filter(p => p.category === filter);
 
-    if (loading) return <div className="p-8 text-center">Loading problems...</div>;
+    if (loading) return <LoadingSpinner />;
 
     return (
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
