@@ -187,7 +187,7 @@ const AdminDashboard = () => {
             <h1 className="text-3xl font-bold text-white mb-8">Admin Dashboard</h1>
 
             <div className="flex space-x-4 mb-6 border-b border-slate-200 overflow-x-auto">
-                {['teams', 'submissions', 'problems', 'rounds', 'users', 'instructions', 'contacts'].map(tab => (
+                {['teams', 'submissions', 'problems', 'rounds', 'users', 'info', 'contacts'].map(tab => (
                     <button
                         key={tab}
                         className={`pb-2 px-4 font-medium capitalize whitespace-nowrap ${activeTab === tab ? 'text-primary border-b-2 border-primary' : 'text-slate-500'}`}
@@ -411,10 +411,10 @@ const AdminDashboard = () => {
                 </div>
             )}
 
-            {/* INSTRUCTIONS TAB */}
-            {activeTab === 'instructions' && (
+            {/* INFO TAB */}
+            {activeTab === 'info' && (
                 <div className="card">
-                    <h3 className="font-bold text-lg mb-4">Edit General Instructions</h3>
+                    <h3 className="font-bold text-lg mb-4">Edit General Info</h3>
                     <form onSubmit={handleUpdateInstructions} className="space-y-4">
                         <div className="bg-blue-50 border border-blue-200 rounded-md p-4 mb-4">
                             <p className="text-sm text-blue-800 flex items-center">

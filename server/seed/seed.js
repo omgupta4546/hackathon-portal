@@ -16,7 +16,75 @@ const seedData = async () => {
         await User.deleteMany();
         await Problem.deleteMany();
         await Team.deleteMany();
+        await Team.deleteMany();
         await Round.deleteMany();
+        const Instruction = require('../models/Instruction');
+        await Instruction.deleteMany();
+
+        await Instruction.create({
+            content: `General Information: Robotics Club Internal Hackathon 2025
+
+Welcome to the official Robotics Club Internal Hackathon, where innovation meets execution. This event is designed to challenge participants to ideate, design, and build impactful hardware or software solutions within a competitive yet collaborative environment.
+
+Team Formation
+
+Team Size: 1 to 4 members
+
+Eligibility: Open to students from all branches and academic years
+
+Interdisciplinary teams are encouraged
+
+Participation Process
+1. Registration
+
+Participants must register on the platform and either:
+
+Create a new team, or
+
+Join an existing one
+
+2. Problem Statement Selection
+
+Navigate to the “Problems” section to explore available hardware and software challenges. Teams must select one problem statement for participation.
+
+3. Project Submission
+
+All project submissions must be uploaded through the “Submit” page before the stated deadline.
+Submissions should strictly follow the specified format.
+
+Submission Requirements
+
+Presentation / Demo Video:
+Upload your presentation or demonstration video to Google Drive and share a public access link.
+
+Ensure the video clearly explains:
+
+Problem understanding
+
+Approach & design
+
+Prototype / code walk-through
+
+Final outcome
+
+Code of Conduct
+
+All submissions must be original.
+
+Plagiarism, code copying, or use of pre-built solutions will lead to immediate disqualification.
+
+Proper documentation and fair participation are mandatory.
+
+Support & Contact
+
+For queries, technical issues, or clarification regarding the event, participants may reach out to the student coordinators:
+
+Prateek Singhal – 8440079089
+
+Gargi Goyal – 8619628819
+
+Yash Nagar – 9602230907`
+        });
 
         // Create Users
         const adminUser = await User.create({

@@ -31,6 +31,7 @@ const Navbar = () => {
                         <Link to="/problems" className="text-slate-300 hover:text-primary px-3 py-2 rounded-md text-sm font-medium">Problem Statements</Link>
                         <Link to="/rounds" className="text-slate-300 hover:text-primary px-3 py-2 rounded-md text-sm font-medium">Rounds</Link>
                         <Link to="/winners" className="text-slate-300 hover:text-primary px-3 py-2 rounded-md text-sm font-medium">Winners</Link>
+                        <Link to="/info" className="text-slate-300 hover:text-primary px-3 py-2 rounded-md text-sm font-medium">Info</Link>
                         <Link to="/help" className="text-slate-300 hover:text-primary px-3 py-2 rounded-md text-sm font-medium">Help</Link>
 
                         {user ? (
@@ -72,6 +73,7 @@ const Navbar = () => {
                         <Link to="/problems" className="block text-slate-300 hover:text-primary px-3 py-2 rounded-md text-base font-medium">Problem Statements</Link>
                         <Link to="/rounds" className="block text-slate-300 hover:text-primary px-3 py-2 rounded-md text-base font-medium">Rounds</Link>
                         <Link to="/winners" className="block text-slate-300 hover:text-primary px-3 py-2 rounded-md text-base font-medium">Winners</Link>
+                        <Link to="/info" className="block text-slate-300 hover:text-primary px-3 py-2 rounded-md text-base font-medium">Info</Link>
                         <Link to="/help" className="block text-slate-300 hover:text-primary px-3 py-2 rounded-md text-base font-medium">Help</Link>
                         {user ? (
                             <>
