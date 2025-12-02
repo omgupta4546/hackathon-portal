@@ -111,11 +111,11 @@ const Rounds = () => {
                             transition={{ delay: index * 0.1 }}
                             className={`card border-l-4 ${status.color}`}
                         >
-                            <div className="flex flex-col md:flex-row justify-between md:items-center">
-                                <div>
-                                    <h2 className="text-xl font-bold text-slate-100 flex items-center">
+                            <div className="flex flex-col md:flex-row justify-between md:items-center gap-4">
+                                <div className="flex-1 min-w-0">
+                                    <h2 className="text-xl font-bold text-slate-100 flex items-center flex-wrap gap-2">
                                         {round.name}
-                                        <span className={`ml-3 px-3 py-1 text-xs rounded-full flex items-center font-medium ${status.state === 'winner' ? 'bg-yellow-100 text-yellow-800' :
+                                        <span className={`px-3 py-1 text-xs rounded-full flex items-center font-medium shrink-0 ${status.state === 'winner' ? 'bg-yellow-100 text-yellow-800' :
                                             status.state === 'shortlisted' || status.state === 'qualified' || status.state === 'selected' ? 'bg-green-100 text-green-800' :
                                                 status.state === 'submitted' ? 'bg-yellow-50 text-yellow-700' :
                                                     status.state === 'rejected' ? 'bg-red-100 text-red-800' :
@@ -126,16 +126,16 @@ const Rounds = () => {
                                             {status.label}
                                         </span>
                                     </h2>
-                                    <p className="text-slate-300 mt-1">{round.description}</p>
-                                    <div className="flex items-center text-sm text-slate-400 mt-2">
-                                        <Calendar className="w-4 h-4 mr-1" />
+                                    <p className="text-slate-300 mt-2 text-sm md:text-base leading-relaxed">{round.description}</p>
+                                    <div className="flex items-center text-sm text-slate-400 mt-3">
+                                        <Calendar className="w-4 h-4 mr-1 shrink-0" />
                                         {round.startAt ? new Date(round.startAt).toLocaleDateString('en-GB') : 'TBA'}
                                         {round.endAt ? ` - ${new Date(round.endAt).toLocaleDateString('en-GB')}` : ''}
-                                        {round.isOffline && <span className="ml-4 px-2 py-0.5 bg-purple-100 text-purple-800 rounded text-xs">Offline Mode</span>}
+                                        {round.isOffline && <span className="ml-4 px-2 py-0.5 bg-purple-100 text-purple-800 rounded text-xs shrink-0">Offline Mode</span>}
                                     </div>
                                 </div>
 
-                                <div className="mt-4 md:mt-0">
+                                <div className="mt-4 md:mt-0 md:ml-6 shrink-0 flex flex-col items-start md:items-end">
                                     {status.state === 'open' && (
                                         round.roundId === 'round1' ? (
                                             <Link to="/problems" className="btn-primary">Select Problem</Link>
