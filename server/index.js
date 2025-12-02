@@ -6,7 +6,7 @@ const path = require('path');
 const connectDB = require('./config/db');
 const passport = require('./config/passport');
 console.log('Environment Variables Loaded. SMTP_HOST:', process.env.SMTP_HOST);
-connectDB();
+// connectDB(); // Called in startServer
 
 const app = express();
 app.enable('trust proxy'); // Required for Render/Heroku to correctly detect HTTPS
@@ -32,4 +32,14 @@ app.use('/api/contacts', require('./routes/contactRoutes'));
 
 const PORT = process.env.PORT || 5000;
 
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+const startServer = async () => {
+    try {
+        await connectDB();
+        app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+    } catch (error) {
+        console.error('Failed to connect to DB:', error);
+        process.exit(1);
+    }
+};
+
+startServer();

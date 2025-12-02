@@ -9,10 +9,16 @@ passport.use(new GoogleStrategy({
     proxy: true // Required for Render/Heroku to correctly generate HTTPS callback URLs
 },
     async (accessToken, refreshToken, profile, done) => {
-        console.log('Google Auth Callback received. Profile:', profile.emails[0].value);
+        const email = profile.emails && profile.emails[0] ? profile.emails[0].value : null;
+        console.log('Google Auth Callback received. Profile:', email);
+
+        if (!email) {
+            return done(null, false, { message: 'No email found in Google profile' });
+        }
+
         try {
             // Check if user already exists
-            let user = await User.findOne({ email: profile.emails[0].value });
+            let user = await User.findOne({ email });
 
             if (user) {
                 return done(null, user);
