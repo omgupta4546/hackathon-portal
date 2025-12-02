@@ -19,8 +19,8 @@ const Landing = () => {
                                 className="sm:text-center lg:text-left"
                             >
                                 <h1 className="text-4xl tracking-tight font-extrabold text-text sm:text-5xl md:text-6xl">
-                                    <span className="block xl:inline">Robotics Club</span>{' '}
-                                    <span className="block text-primary xl:inline">Internal Hackathon</span>
+                                    <span className="block xl:inline">Robotics Club Presents</span>{' '}
+                                    <span className="block text-primary xl:inline">Robothon</span>
                                 </h1>
                                 <p className="mt-3 text-base text-slate-300 sm:mt-5 sm:text-lg sm:max-w-xl sm:mx-auto md:mt-5 md:text-xl lg:mx-0">
                                     Join us for an electrifying 24-hour hackathon where hardware meets software. Innovate, build, and showcase your skills to win amazing prizes.
