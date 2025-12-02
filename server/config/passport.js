@@ -9,6 +9,7 @@ passport.use(new GoogleStrategy({
     proxy: true // Required for Render/Heroku to correctly generate HTTPS callback URLs
 },
     async (accessToken, refreshToken, profile, done) => {
+        console.log('Google Auth Callback received. Profile:', profile.emails[0].value);
         try {
             // Check if user already exists
             let user = await User.findOne({ email: profile.emails[0].value });
@@ -17,13 +18,8 @@ passport.use(new GoogleStrategy({
                 return done(null, user);
             }
 
-            // If not, create new user
-            user = await User.create({
-                name: profile.displayName,
-                email: profile.emails[0].value,
-                passwordHash: '', // No password for Google users
-                role: 'participant'
-            });
+            // If not, return error
+            return done(null, false, { message: 'User not registered. Please sign up first.' });
 
             done(null, user);
         } catch (error) {

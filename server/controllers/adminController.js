@@ -103,6 +103,26 @@ const getAllUsers = async (req, res) => {
 const deleteUser = async (req, res) => {
     const { id } = req.params;
     try {
+        const user = await User.findById(id);
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        // Send email notification
+        if (user.email) {
+            await sendMail({
+                to: user.email,
+                subject: 'Account Deletion Notification',
+                html: `
+                    <h3>Hello ${user.name},</h3>
+                    <p>Your account has been deleted by the administrator.</p>
+                    <p>If you believe this is a mistake, please contact support.</p>
+                    <br/>
+                    <p>Best Regards,<br/>Hackathon Admin Team</p>
+                `,
+            });
+        }
+
         await User.findByIdAndDelete(id);
         // Optional: Remove from teams if they are a member
         // This is complex as it involves updating Team documents. 
