@@ -14,18 +14,56 @@ const Submit = () => {
     const [existingSubmission, setExistingSubmission] = useState(null);
 
     useEffect(() => {
-        // Check for existing submission
-        const checkSubmission = async () => {
+        const validateRound = async () => {
             try {
-                const { data } = await api.get('/submissions');
-                const sub = data.find(s => s.roundId === roundId);
+                // 1. Fetch Rounds to check validity
+                const roundsRes = await api.get('/rounds');
+                const rounds = roundsRes.data;
+                const currentRound = rounds.find(r => r.roundId === roundId);
+
+                if (!currentRound) {
+                    toast.error('Invalid round');
+                    navigate('/dashboard');
+                    return;
+                }
+
+                // 2. Restrict to Round 2 only
+                if (roundId !== 'round2') {
+                    toast.error('Submissions are only open for Round 2');
+                    navigate('/dashboard');
+                    return;
+                }
+
+                // 3. Check if round is active
+                const now = new Date();
+                const start = new Date(currentRound.startAt);
+                const end = new Date(currentRound.endAt);
+
+                if (now < start) {
+                    toast.error('Round has not started yet');
+                    navigate('/dashboard');
+                    return;
+                }
+                if (now > end) {
+                    toast.error('Round has ended');
+                    navigate('/dashboard');
+                    return;
+                }
+
+                // 4. Check for existing submission
+                const subsRes = await api.get('/submissions');
+                const sub = subsRes.data.find(s => s.roundId === roundId);
                 if (sub) setExistingSubmission(sub);
+
             } catch (err) {
                 console.error(err);
+                toast.error('Failed to validate round');
+                navigate('/dashboard');
             }
-        }
-        checkSubmission();
-    }, [roundId]);
+        };
+
+        validateRound();
+    }, [roundId, navigate]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -33,7 +71,7 @@ const Submit = () => {
         setUploading(true);
         try {
             await api.post('/submissions', {
-                roundId: roundId || 'round1',
+                roundId: roundId, // Use the actual roundId from params
                 description,
                 githubLink,
                 driveLink

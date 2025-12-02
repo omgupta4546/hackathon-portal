@@ -2,27 +2,37 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import api from '../utils/api';
 import { useAuth } from '../context/AuthContext';
-import { Users, Code, CheckCircle, Clock, AlertCircle } from 'lucide-react';
+import { Users, Code, CheckCircle, Clock, AlertCircle, Lock } from 'lucide-react';
 import toast from 'react-hot-toast';
 import LoadingSpinner from '../components/LoadingSpinner';
 
 const Dashboard = () => {
     const { user } = useAuth();
     const [team, setTeam] = useState(null);
+    const [rounds, setRounds] = useState([]);
+    const [submissions, setSubmissions] = useState([]);
     const [loading, setLoading] = useState(true);
     const [teamName, setTeamName] = useState('');
     const [inviteCode, setInviteCode] = useState('');
 
     useEffect(() => {
-        fetchTeam();
+        fetchData();
     }, []);
 
-    const fetchTeam = async () => {
+    const fetchData = async () => {
         try {
-            const { data } = await api.get('/teams/me');
-            setTeam(data);
+            const [teamRes, roundsRes, subsRes] = await Promise.allSettled([
+                api.get('/teams/me'),
+                api.get('/rounds'),
+                api.get('/submissions')
+            ]);
+
+            if (teamRes.status === 'fulfilled') setTeam(teamRes.value.data);
+            if (roundsRes.status === 'fulfilled') setRounds(roundsRes.value.data);
+            if (subsRes.status === 'fulfilled') setSubmissions(subsRes.value.data);
+
         } catch (error) {
-            // No team found is expected for new users
+            console.error('Error fetching dashboard data:', error);
         } finally {
             setLoading(false);
         }
@@ -63,9 +73,39 @@ const Dashboard = () => {
 
     if (loading) return <LoadingSpinner />;
 
+    // Helper to check round status
+    const getRoundStatus = (roundId) => {
+        const round = rounds.find(r => r.roundId === roundId);
+        if (!round) return 'unknown';
+        const now = new Date();
+        const start = new Date(round.startAt);
+        const end = round.endAt ? new Date(round.endAt) : null;
+
+        if (now < start) return 'upcoming';
+        if (end && now > end) return 'ended';
+        return 'active';
+    };
+
+    const isRejected = submissions.some(s => s.status === 'rejected');
+    const round1 = rounds.find(r => r.roundId === 'round1');
+    const isRound1Active = round1 && new Date() < new Date(round1.endAt); // Active if before end date
+
+    const round2 = rounds.find(r => r.roundId === 'round2');
+    const isRound2Active = round2 && new Date() >= new Date(round2.startAt) && new Date() <= new Date(round2.endAt);
+
     return (
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
             <h1 className="text-3xl font-bold text-white mb-8">Welcome, {user.name}</h1>
+
+            {isRejected && (
+                <div className="bg-red-500/10 border border-red-500 text-red-500 p-4 rounded-lg mb-8 flex items-center">
+                    <AlertCircle className="w-6 h-6 mr-3" />
+                    <div>
+                        <h3 className="font-bold text-lg">Team Rejected</h3>
+                        <p>Unfortunately, your team has been rejected. You cannot participate in further rounds.</p>
+                    </div>
+                </div>
+            )}
 
             {!team ? (
                 <div className="grid md:grid-cols-2 gap-8">
@@ -115,7 +155,9 @@ const Dashboard = () => {
                                     (Share this code to invite members)
                                 </p>
                             </div>
-                            <button onClick={leaveTeam} className="text-red-500 text-sm hover:underline">Leave Team</button>
+                            {!isRejected && (
+                                <button onClick={leaveTeam} className="text-red-500 text-sm hover:underline">Leave Team</button>
+                            )}
                         </div>
 
                         <div className="mt-6">
@@ -136,38 +178,69 @@ const Dashboard = () => {
                         </div>
                     </div>
 
-                    {/* Problem Statement Status */}
+                    {/* Problem Statement Status - Round 1 */}
                     <div className="card">
                         <h2 className="text-xl font-bold mb-4 flex items-center"><Code className="mr-2 text-primary" /> Problem Statement</h2>
                         {team.problemId ? (
                             <div className="bg-blue-50 border border-blue-100 p-4 rounded-lg">
-                                <h3 className="font-bold text-lg text-blue-900">{team.problemId.title}</h3>
-                                <p className="text-blue-700 text-sm mt-1">{team.problemId.category} • {team.problemId.difficulty}</p>
-                                <p className="text-slate-300 mt-2">{team.problemId.description}</p>
+                                <div className="flex justify-between items-start">
+                                    <div>
+                                        <h3 className="font-bold text-lg text-blue-900">{team.problemId.title}</h3>
+                                        <p className="text-blue-700 text-sm mt-1">{team.problemId.category} • {team.problemId.difficulty}</p>
+                                        <p className="text-slate-600 mt-2">{team.problemId.description}</p>
+                                    </div>
+                                    {isRound1Active && !isRejected && team.leaderUserId === user._id && (
+                                        <Link to="/problems" className="text-sm text-blue-600 hover:underline flex items-center">
+                                            <Code className="w-4 h-4 mr-1" /> Change
+                                        </Link>
+                                    )}
+                                </div>
                             </div>
                         ) : (
                             <div className="text-center py-8 bg-slate-50 rounded-lg border border-dashed border-slate-300">
-                                <p className="text-black mb-4">You haven't selected a problem statement yet.</p>
-                                {team.leaderUserId === user._id ? (
-                                    <Link to="/problems" className="btn-primary">Browse Problems</Link>
+                                {isRejected ? (
+                                    <p className="text-red-500 mb-4">Selection Locked (Team Rejected)</p>
+                                ) : isRound1Active ? (
+                                    <>
+                                        <p className="text-black mb-4">You haven't selected a problem statement yet.</p>
+                                        {team.leaderUserId === user._id ? (
+                                            <Link to="/problems" className="btn-primary">Browse Problems</Link>
+                                        ) : (
+                                            <p className="text-sm text-slate-300">Only the team leader can select a problem.</p>
+                                        )}
+                                    </>
                                 ) : (
-                                    <p className="text-sm text-slate-300">Only the team leader can select a problem.</p>
+                                    <p className="text-red-500 mb-4 flex items-center justify-center">
+                                        <Lock className="w-4 h-4 mr-2" /> Problem Selection Locked (Phase 1 Ended)
+                                    </p>
                                 )}
                             </div>
                         )}
                     </div>
 
-                    {/* Submission Status */}
+                    {/* Submission Status - Round 2 */}
                     <div className="card">
                         <h2 className="text-xl font-bold mb-4 flex items-center"><CheckCircle className="mr-2 text-green-600" /> Submission Status</h2>
-                        {/* This would ideally fetch submission status from API */}
-                        <div className="flex items-center justify-between bg-slate-50 p-4 rounded-lg">
-                            <div>
-                                <p className="text-black font-medium">Round 1: Idea Submission</p>
-                                <p className="text-sm text-red-500">Deadline: Nov 30, 2025</p>
+                        {isRejected ? (
+                            <div className="bg-slate-50 p-4 rounded-lg text-center text-slate-500">
+                                <p>Submissions are closed for rejected teams.</p>
                             </div>
-                            <Link to="/submit/round1" className="btn-secondary text-sm">View / Submit</Link>
-                        </div>
+                        ) : isRound2Active ? (
+                            <div className="flex items-center justify-between bg-slate-50 p-4 rounded-lg">
+                                <div>
+                                    <p className="text-black font-medium">Phase 2: Idea Submission</p>
+                                    <p className="text-sm text-red-500">Deadline: {new Date(round2?.endAt).toLocaleDateString()}</p>
+                                </div>
+                                <Link to="/submit/round2" className="btn-secondary text-sm">View / Submit</Link>
+                            </div>
+                        ) : (
+                            <div className="bg-slate-50 p-4 rounded-lg text-center text-slate-500">
+                                <p className="flex items-center justify-center">
+                                    <Clock className="w-4 h-4 mr-2" />
+                                    {getRoundStatus('round2') === 'upcoming' ? 'Phase 2 (Idea Submission) has not started yet.' : 'Phase 2 has ended.'}
+                                </p>
+                            </div>
+                        )}
                     </div>
                 </div>
             )}

@@ -8,11 +8,25 @@ export const AuthProvider = ({ children }) => {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        const storedUser = localStorage.getItem('user');
-        if (storedUser) {
-            setUser(JSON.parse(storedUser));
-        }
-        setLoading(false);
+        const checkUser = async () => {
+            const storedUser = localStorage.getItem('user');
+            if (storedUser) {
+                try {
+                    const parsedUser = JSON.parse(storedUser);
+                    // Optimistically set user
+                    setUser(parsedUser);
+
+                    // Verify with backend
+                    await api.get('/auth/me');
+                } catch (error) {
+                    console.error("Session invalid:", error);
+                    localStorage.removeItem('user');
+                    setUser(null);
+                }
+            }
+            setLoading(false);
+        };
+        checkUser();
     }, []);
 
     const login = async (email, password) => {

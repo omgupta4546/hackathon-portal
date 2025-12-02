@@ -79,9 +79,13 @@ const AdminDashboard = () => {
         try {
             await api.delete(`/admin/teams/${id}`);
             toast.success('Team deleted');
-            fetchData();
+            // Optimistic update
+            setTeams(prev => prev.filter(t => t._id !== id));
+            // Also remove related submissions from state
+            setSubmissions(prev => prev.filter(s => s.teamId?._id !== id));
         } catch (err) {
             toast.error('Failed to delete team');
+            fetchData(); // Revert on error
         }
     };
 
@@ -90,20 +94,28 @@ const AdminDashboard = () => {
         try {
             await api.delete(`/admin/users/${id}`);
             toast.success('User deleted');
-            fetchData();
+            // Optimistic update
+            setUsers(prev => prev.filter(u => u._id !== id));
         } catch (err) {
             toast.error('Failed to delete user');
+            fetchData();
         }
     };
 
     // --- Submission Actions ---
     const updateStatus = async (id, status) => {
+        // Optimistic update
+        const originalSubmissions = [...submissions];
+        setSubmissions(prev => prev.map(sub =>
+            sub._id === id ? { ...sub, status } : sub
+        ));
+
         try {
             await api.put(`/admin/submissions/${id}/status`, { status });
             toast.success(`Marked as ${status}`);
-            fetchData();
         } catch (err) {
             toast.error('Failed to update status');
+            setSubmissions(originalSubmissions); // Revert
         }
     }
 

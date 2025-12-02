@@ -71,9 +71,32 @@ const seedData = async () => {
 
         // Create Rounds
         await Round.create([
-            { roundId: 'round1', name: 'Round 1: Idea Submission', description: 'Submit your idea and prototype details.', startAt: new Date(), endAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000) },
-            { roundId: 'round2', name: 'Round 2: Presentation', description: 'Offline presentation of your prototype.', isOffline: true },
-            { roundId: 'round3', name: 'Round 3: Grand Finale', description: 'Final showdown.', isOffline: true }
+            {
+                roundId: 'round1',
+                name: 'Phase 1: Problem Selection',
+                description: 'Select your problem statement and form your team.',
+                startAt: new Date(),
+                endAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000) // 7 days
+            },
+            {
+                roundId: 'round2',
+                name: 'Phase 2: Idea Submission',
+                description: 'Submit your idea and prototype details.',
+                startAt: new Date(Date.now() + 8 * 24 * 60 * 60 * 1000), // Starts after Round 1
+                endAt: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000)
+            },
+            {
+                roundId: 'round3',
+                name: 'Phase 3: Presentation',
+                description: 'Offline presentation of your prototype.',
+                isOffline: true
+            },
+            {
+                roundId: 'round4',
+                name: 'Phase 4: Grand Finale',
+                description: 'Final showdown.',
+                isOffline: true
+            }
         ]);
         console.log('Rounds seeded');
 

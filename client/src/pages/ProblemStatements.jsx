@@ -12,15 +12,26 @@ const ProblemStatements = () => {
     const { user } = useAuth();
     const [myTeam, setMyTeam] = useState(null);
 
+    const [isRound1Active, setIsRound1Active] = useState(false);
+
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const [probsRes, teamRes] = await Promise.all([
+                const [probsRes, teamRes, roundsRes] = await Promise.all([
                     api.get('/problems'),
-                    user ? api.get('/teams/me').catch(() => ({ data: null })) : Promise.resolve({ data: null })
+                    user ? api.get('/teams/me').catch(() => ({ data: null })) : Promise.resolve({ data: null }),
+                    api.get('/rounds')
                 ]);
                 setProblems(probsRes.data);
                 setMyTeam(teamRes.data);
+
+                // Check Round 1 status
+                const round1 = roundsRes.data.find(r => r.roundId === 'round1');
+                if (round1) {
+                    const now = new Date();
+                    const end = new Date(round1.endAt);
+                    setIsRound1Active(now < end);
+                }
             } catch (error) {
                 console.error(error);
             } finally {
@@ -91,6 +102,10 @@ const ProblemStatements = () => {
                             ) : myTeam?.problemId ? (
                                 <button disabled className="w-full py-2 bg-slate-100 text-slate-400 rounded-lg cursor-not-allowed">
                                     Locked
+                                </button>
+                            ) : !isRound1Active ? (
+                                <button disabled className="w-full py-2 bg-red-100 text-red-400 rounded-lg cursor-not-allowed flex items-center justify-center">
+                                    <Lock className="w-4 h-4 mr-2" /> Selection Closed
                                 </button>
                             ) : (
                                 <button
