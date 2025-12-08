@@ -242,6 +242,41 @@ const Dashboard = () => {
                             </div>
                         )}
                     </div>
+
+                    {/* WhatsApp Group Link */}
+                    <div className="card">
+                        <h2 className="text-xl font-bold mb-4 flex items-center text-green-500">
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                width="24"
+                                height="24"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                strokeWidth="2"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                className="mr-2"
+                            >
+                                <path d="M3 21l1.65-3.8a9 9 0 1 1 3.4 2.9L3 21" />
+                            </svg>
+                            Join WhatsApp Group
+                        </h2>
+                        <div className="bg-green-50 border border-green-100 p-4 rounded-lg flex flex-col sm:flex-row items-center justify-between gap-4">
+                            <div>
+                                <h3 className="font-bold text-lg text-green-900">Stay Updated!</h3>
+                                <p className="text-green-700 text-sm">Join the official hackathon WhatsApp group for announcements and queries.</p>
+                            </div>
+                            <a
+                                href="https://chat.whatsapp.com/HwYEBtwkwMu0s4dkZfuKvj"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-lg font-medium transition-colors flex items-center"
+                            >
+                                Join Group
+                            </a>
+                        </div>
+                    </div>
                 </div>
             )}
         </div>
