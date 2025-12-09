@@ -35,7 +35,7 @@ const Layout = () => {
                 </main>
                 <footer className="bg-slate-800 border-t border-slate-700 py-6">
                     <div className="max-w-7xl mx-auto px-4 text-center text-slate-400 text-sm">
-                        © {new Date().getFullYear()} Robotics Club Hackathon. All rights reserved.
+                        © {new Date().getFullYear()} Robotics Club Hackathon — Built with ❤️ & Caffeine by Om Gupta
                     </div>
                 </footer>
                 <Toaster position="top-right" />
