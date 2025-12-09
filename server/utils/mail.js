@@ -13,7 +13,7 @@ const sendMail = async ({ to, subject, html }) => {
         return null;
     }
 
-    const port = Number(process.env.SMTP_PORT) || 587;
+    const port = Number(process.env.SMTP_PORT) || 465;
     const transporter = nodemailer.createTransport({
         host: process.env.SMTP_HOST,
         port: port,
@@ -25,6 +25,10 @@ const sendMail = async ({ to, subject, html }) => {
     });
 
     try {
+        // Verify connection configuration
+        await transporter.verify();
+        console.log('✅ SMTP Connection verified successfully');
+
         const info = await transporter.sendMail({
             from: `"Hackathon Portal" <${process.env.SMTP_USER}>`,
             to,
@@ -35,6 +39,9 @@ const sendMail = async ({ to, subject, html }) => {
         return info;
     } catch (error) {
         console.error('Error sending email:', error);
+        if (error.code === 'ETIMEDOUT') {
+            console.error('👉 Tip: Check if your network blocks port ' + port + '. Try using port 465 with secure: true if supported.');
+        }
         return null;
     }
 };
