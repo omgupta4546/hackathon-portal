@@ -22,6 +22,7 @@ const sendMail = async ({ to, subject, html }) => {
             user: process.env.SMTP_USER,
             pass: process.env.SMTP_PASS ? process.env.SMTP_PASS.replace(/\s+/g, '') : '',
         },
+        family: 4 // Force IPv4 to avoid IPv6 timeouts on some cloud providers
     });
 
     try {
