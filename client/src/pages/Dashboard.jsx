@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import api from '../utils/api';
 import { useAuth } from '../context/AuthContext';
-import { Users, Code, CheckCircle, Clock, AlertCircle, Lock } from 'lucide-react';
+import { Users, Code, CheckCircle, Clock, AlertCircle, Lock, FileText, Download } from 'lucide-react';
 import toast from 'react-hot-toast';
 import LoadingSpinner from '../components/LoadingSpinner';
 
@@ -241,6 +241,30 @@ const Dashboard = () => {
                                 </p>
                             </div>
                         )}
+                    </div>
+
+
+                    {/* Resources */}
+                    <div className="card">
+                        <h2 className="text-xl font-bold mb-4 flex items-center text-blue-400">
+                            <FileText className="w-6 h-6 mr-2" />
+                            Resources
+                        </h2>
+                        <div className="bg-slate-700/50 border border-slate-600 p-4 rounded-lg flex flex-col sm:flex-row items-center justify-between gap-4">
+                            <div>
+                                <h3 className="font-bold text-lg text-slate-100">Round 2 PPT Template</h3>
+                                <p className="text-slate-400 text-sm">Use this template for your idea submission.</p>
+                            </div>
+                            <a
+                                href="https://docs.google.com/presentation/d/1ok4wQVbIPjNhmngpncWqOfxZNyUNphfF/edit?usp=sharing&ouid=115438521212361487487&rtpof=true&sd=true"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-medium transition-colors flex items-center whitespace-nowrap"
+                            >
+                                <Download className="w-4 h-4 mr-2" />
+                                Download Template
+                            </a>
+                        </div>
                     </div>
 
                     {/* WhatsApp Group Link */}

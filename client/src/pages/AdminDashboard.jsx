@@ -15,6 +15,18 @@ const AdminDashboard = () => {
     const [loading, setLoading] = useState(true);
     const [activeTab, setActiveTab] = useState('teams');
 
+    // Derived state for User-Team mapping
+    const userTeamMap = teams.reduce((acc, team) => {
+        team.members.forEach(member => {
+            acc[member.userId] = team.name;
+        });
+        // Also map leader if not in members array (though usually they are)
+        if (!acc[team.leaderUserId]) {
+            acc[team.leaderUserId] = team.name;
+        }
+        return acc;
+    }, {});
+
     // Form States
     const [editingProblem, setEditingProblem] = useState(null);
     const [newProblem, setNewProblem] = useState({ title: '', category: 'Software', description: '', maxTeamSize: 4 });
@@ -388,6 +400,7 @@ const AdminDashboard = () => {
                                 <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Phone</th>
                                 <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Roll No</th>
                                 <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Branch</th>
+                                <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Team</th>
                                 <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Actions</th>
                             </tr>
                         </thead>
@@ -399,6 +412,9 @@ const AdminDashboard = () => {
                                     <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-500">{user.phoneNumber}</td>
                                     <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-500">{user.rollNumber}</td>
                                     <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-500">{user.branch}</td>
+                                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-blue-600">
+                                        {userTeamMap[user._id] ? userTeamMap[user._id] : <span className="text-slate-400 text-xs italic">No Team</span>}
+                                    </td>
                                     <td className="px-6 py-4 whitespace-nowrap text-sm text-red-500">
                                         <button onClick={() => deleteUser(user._id)} className="text-red-600 hover:text-red-900 flex items-center">
                                             <Trash2 className="w-4 h-4 mr-1" /> Delete
