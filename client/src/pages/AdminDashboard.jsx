@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import api, { BASE_URL } from '../utils/api';
 import toast from 'react-hot-toast';
-import { Download, Check, X, Trash2, Edit, Plus, Save, FileText, Info } from 'lucide-react';
+import { Download, Check, X, Trash2, Edit, Plus, Save, FileText, Info, Users, Briefcase, Layers, UserX } from 'lucide-react';
 import LoadingSpinner from '../components/LoadingSpinner';
 
 const AdminDashboard = () => {
@@ -197,6 +197,51 @@ const AdminDashboard = () => {
     return (
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
             <h1 className="text-3xl font-bold text-white mb-8">Admin Dashboard</h1>
+
+            {/* Stats Overview */}
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+                <div className="card flex items-center p-6">
+                    <div className="rounded-full bg-blue-100 p-3 mr-4">
+                        <Users className="w-8 h-8 text-blue-600" />
+                    </div>
+                    <div>
+                        <p className="text-sm text-slate-500 font-medium">Total Users</p>
+                        <h3 className="text-3xl font-bold text-blue-800">{users.length}</h3>
+                    </div>
+                </div>
+
+                <div className="card flex items-center p-6">
+                    <div className="rounded-full bg-purple-100 p-3 mr-4">
+                        <Briefcase className="w-8 h-8 text-purple-600" />
+                    </div>
+                    <div>
+                        <p className="text-sm text-slate-500 font-medium">Total Teams</p>
+                        <h3 className="text-3xl font-bold text-purple-800">{teams.length}</h3>
+                    </div>
+                </div>
+
+                <div className="card flex items-center p-6">
+                    <div className="rounded-full bg-green-100 p-3 mr-4">
+                        <Layers className="w-8 h-8 text-green-600" />
+                    </div>
+                    <div>
+                        <p className="text-sm text-slate-500 font-medium">Total Submissions</p>
+                        <h3 className="text-3xl font-bold text-green-800">{submissions.length}</h3>
+                    </div>
+                </div>
+
+                <div className="card flex items-center p-6">
+                    <div className="rounded-full bg-red-100 p-3 mr-4">
+                        <UserX className="w-8 h-8 text-red-600" />
+                    </div>
+                    <div>
+                        <p className="text-sm text-slate-500 font-medium">Users w/o Team</p>
+                        <h3 className="text-3xl font-bold text-red-800">
+                            {users.length - Object.keys(userTeamMap).length}
+                        </h3>
+                    </div>
+                </div>
+            </div>
 
             <div className="flex space-x-4 mb-6 border-b border-slate-200 overflow-x-auto">
                 {['teams', 'submissions', 'problems', 'rounds', 'users', 'info', 'contacts'].map(tab => (
