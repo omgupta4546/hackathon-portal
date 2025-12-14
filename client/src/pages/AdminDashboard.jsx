@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react';
 import api, { BASE_URL } from '../utils/api';
 import toast from 'react-hot-toast';
-import { Download, Check, X, Trash2, Edit, Plus, Save, FileText, Info, Users, Briefcase, Layers, UserX, UserPlus, Shield } from 'lucide-react';
+import { Download, Check, X, Trash2, Edit, Plus, Save, FileText, Info, Users, Briefcase, Layers, UserX, UserPlus, Shield, Bell } from 'lucide-react';
 import LoadingSpinner from '../components/LoadingSpinner';
+import AdminNotificationPanel from '../components/AdminNotificationPanel';
 
 const AdminDashboard = () => {
     const [teams, setTeams] = useState([]);
@@ -283,7 +284,7 @@ const AdminDashboard = () => {
             </div>
 
             <div className="flex space-x-4 mb-6 border-b border-slate-200 overflow-x-auto">
-                {['teams', 'submissions', 'problems', 'rounds', 'users', 'info', 'contacts'].map(tab => (
+                {['teams', 'submissions', 'problems', 'rounds', 'users', 'info', 'contacts', 'notifications'].map(tab => (
                     <button
                         key={tab}
                         className={`pb-2 px-4 font-medium capitalize whitespace-nowrap ${activeTab === tab ? 'text-primary border-b-2 border-primary' : 'text-slate-500'}`}
@@ -567,6 +568,20 @@ const AdminDashboard = () => {
                     </div>
                 </div>
             )}
+
+            {/* NOTIFICATIONS TAB */}
+            {activeTab === 'notifications' && (
+                <div className="space-y-6">
+                    <AdminNotificationPanel />
+                    <div className="card bg-purple-50 border border-purple-200">
+                        <h3 className="font-bold text-purple-900 mb-2 flex items-center"><Info className="w-5 h-5 mr-2" /> About Notifications</h3>
+                        <p className="text-sm text-purple-800">
+                            Notifications sent here will be broadcasted to all registered users. They will see a bell icon with a red badge in their navbar.
+                        </p>
+                    </div>
+                </div>
+            )}
+
             {/* Manage Members Modal */}
             {managingTeam && (
                 <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">

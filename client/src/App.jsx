@@ -15,41 +15,45 @@ import Info from './pages/Info';
 import Help from './pages/Help';
 import AuthCallback from './pages/AuthCallback';
 
+import { NotificationProvider } from './context/NotificationContext';
+
 function App() {
     return (
         <Router future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
             <AuthProvider>
-                <Routes>
-                    <Route path="/" element={<Layout />}>
-                        <Route index element={<Landing />} />
-                        <Route path="login" element={<Login />} />
-                        <Route path="auth/callback" element={<AuthCallback />} />
-                        <Route path="signup" element={<Signup />} />
-                        <Route path="problems" element={<ProblemStatements />} />
-                        <Route path="rounds" element={<Rounds />} />
-                        <Route path="winners" element={<Winners />} />
-                        <Route path="info" element={<Info />} />
-                        <Route path="help" element={<Help />} />
+                <NotificationProvider>
+                    <Routes>
+                        <Route path="/" element={<Layout />}>
+                            <Route index element={<Landing />} />
+                            <Route path="login" element={<Login />} />
+                            <Route path="auth/callback" element={<AuthCallback />} />
+                            <Route path="signup" element={<Signup />} />
+                            <Route path="problems" element={<ProblemStatements />} />
+                            <Route path="rounds" element={<Rounds />} />
+                            <Route path="winners" element={<Winners />} />
+                            <Route path="info" element={<Info />} />
+                            <Route path="help" element={<Help />} />
 
-                        <Route path="dashboard" element={
-                            <ProtectedRoute>
-                                <Dashboard />
-                            </ProtectedRoute>
-                        } />
+                            <Route path="dashboard" element={
+                                <ProtectedRoute>
+                                    <Dashboard />
+                                </ProtectedRoute>
+                            } />
 
-                        <Route path="submit/:roundId" element={
-                            <ProtectedRoute>
-                                <Submit />
-                            </ProtectedRoute>
-                        } />
+                            <Route path="submit/:roundId" element={
+                                <ProtectedRoute>
+                                    <Submit />
+                                </ProtectedRoute>
+                            } />
 
-                        <Route path="admin" element={
-                            <ProtectedRoute adminOnly>
-                                <AdminDashboard />
-                            </ProtectedRoute>
-                        } />
-                    </Route>
-                </Routes>
+                            <Route path="admin" element={
+                                <ProtectedRoute adminOnly>
+                                    <AdminDashboard />
+                                </ProtectedRoute>
+                            } />
+                        </Route>
+                    </Routes>
+                </NotificationProvider>
             </AuthProvider>
         </Router>
     );

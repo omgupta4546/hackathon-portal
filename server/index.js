@@ -30,6 +30,7 @@ app.use('/api/admin', require('./routes/adminRoutes'));
 app.use('/api/instructions', require('./routes/instructionRoutes'));
 app.use('/api/contacts', require('./routes/contactRoutes'));
 app.use('/api/debug-email', require('./routes/debugRoutes'));
+app.use('/api/notifications', require('./routes/notificationRoutes'));
 
 const PORT = process.env.PORT || 5000;
 
