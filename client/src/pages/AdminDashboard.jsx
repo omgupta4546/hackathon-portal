@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import api, { BASE_URL } from '../utils/api';
 import toast from 'react-hot-toast';
-import { Download, Check, X, Trash2, Edit, Plus, Save, FileText, Info, Users, Briefcase, Layers, UserX } from 'lucide-react';
+import { Download, Check, X, Trash2, Edit, Plus, Save, FileText, Info, Users, Briefcase, Layers, UserX, UserPlus, Shield } from 'lucide-react';
 import LoadingSpinner from '../components/LoadingSpinner';
 
 const AdminDashboard = () => {
@@ -32,6 +32,8 @@ const AdminDashboard = () => {
     const [newProblem, setNewProblem] = useState({ title: '', category: 'Software', description: '', maxTeamSize: 4 });
     const [newContact, setNewContact] = useState({ name: '', phone: '' });
     const [editingRound, setEditingRound] = useState(null);
+    const [managingTeam, setManagingTeam] = useState(null);
+    const [newMemberEmail, setNewMemberEmail] = useState('');
 
     useEffect(() => {
         fetchData();
@@ -111,6 +113,43 @@ const AdminDashboard = () => {
         } catch (err) {
             toast.error('Failed to delete user');
             fetchData();
+        }
+    };
+
+    const handleOpenManage = (team) => {
+        setManagingTeam(team);
+        setNewMemberEmail('');
+    };
+
+    const handleAddMember = async (e) => {
+        e.preventDefault();
+        try {
+            const res = await api.post(`/admin/teams/${managingTeam._id}/members`, { email: newMemberEmail });
+            toast.success('Member added successfully');
+            setManagingTeam(res.data); // Update modal with new data
+            // Update global state
+            setTeams(prev => prev.map(t => t._id === managingTeam._id ? res.data : t));
+            setNewMemberEmail('');
+        } catch (err) {
+            toast.error(err.response?.data?.message || 'Failed to add member');
+        }
+    };
+
+    const handleRemoveMember = async (userId) => {
+        if (!window.confirm('Remove this member?')) return;
+        try {
+            const res = await api.delete(`/admin/teams/${managingTeam._id}/members/${userId}`);
+            toast.success('Member removed');
+
+            if (res.data.message === 'Team deleted (no members left)') {
+                setManagingTeam(null);
+                setTeams(prev => prev.filter(t => t._id !== managingTeam._id));
+            } else {
+                setManagingTeam(res.data);
+                setTeams(prev => prev.map(t => t._id === managingTeam._id ? res.data : t));
+            }
+        } catch (err) {
+            toast.error('Failed to remove member');
         }
     };
 
@@ -280,9 +319,14 @@ const AdminDashboard = () => {
                                         {team.problemId ? team.problemId.title : <span className="text-slate-400">Not Selected</span>}
                                     </td>
                                     <td className="px-6 py-4 whitespace-nowrap text-sm text-red-500">
-                                        <button onClick={() => deleteTeam(team._id)} className="text-red-600 hover:text-red-900 flex items-center">
-                                            <Trash2 className="w-4 h-4 mr-1" /> Delete
-                                        </button>
+                                        <div className="flex space-x-2">
+                                            <button onClick={() => handleOpenManage(team)} className="text-blue-600 hover:text-blue-900 flex items-center bg-blue-50 px-3 py-1 rounded-md">
+                                                <Users className="w-4 h-4 mr-1" /> Manage
+                                            </button>
+                                            <button onClick={() => deleteTeam(team._id)} className="text-red-600 hover:text-red-900 flex items-center bg-red-50 px-3 py-1 rounded-md">
+                                                <Trash2 className="w-4 h-4 mr-1" /> Delete
+                                            </button>
+                                        </div>
                                     </td>
                                 </tr>
                             ))}
@@ -520,6 +564,66 @@ const AdminDashboard = () => {
                                 <button onClick={() => handleDeleteContact(contact._id)} className="text-red-500 hover:bg-red-50 p-2 rounded"><Trash2 className="w-5 h-5" /></button>
                             </div>
                         ))}
+                    </div>
+                </div>
+            )}
+            {/* Manage Members Modal */}
+            {managingTeam && (
+                <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+                    <div className="bg-white rounded-lg shadow-xl w-full max-w-2xl overflow-hidden">
+                        <div className="bg-slate-50 px-6 py-4 border-b border-slate-200 flex justify-between items-center">
+                            <h3 className="font-bold text-lg text-slate-800">Manage Team: {managingTeam.name}</h3>
+                            <button onClick={() => setManagingTeam(null)} className="text-slate-500 hover:text-slate-700">
+                                <X className="w-6 h-6" />
+                            </button>
+                        </div>
+
+                        <div className="p-6">
+                            {/* Add Member Form */}
+                            <form onSubmit={handleAddMember} className="mb-8 flex gap-2">
+                                <input
+                                    type="email"
+                                    placeholder="Enter user email to add"
+                                    className="input-field flex-1"
+                                    value={newMemberEmail}
+                                    onChange={(e) => setNewMemberEmail(e.target.value)}
+                                    required
+                                />
+                                <button type="submit" className="btn-primary flex items-center whitespace-nowrap">
+                                    <UserPlus className="w-4 h-4 mr-2" /> Add Member
+                                </button>
+                            </form>
+
+                            {/* Members List */}
+                            <h4 className="font-semibold text-slate-700 mb-3">Current Members ({managingTeam.members.length}/{managingTeam.maxMembers})</h4>
+                            <div className="bg-slate-50 rounded-md border border-slate-200 divide-y divide-slate-200">
+                                {managingTeam.members.map(member => (
+                                    <div key={member.userId} className="p-3 flex justify-between items-center">
+                                        <div>
+                                            <p className="font-medium text-slate-900 flex items-center">
+                                                {member.name}
+                                                {member.userId === managingTeam.leaderUserId && (
+                                                    <span className="ml-2 text-xs bg-yellow-100 text-yellow-800 px-2 py-0.5 rounded-full flex items-center">
+                                                        <Shield className="w-3 h-3 mr-1" /> Leader
+                                                    </span>
+                                                )}
+                                            </p>
+                                            <p className="text-sm text-slate-500">{member.email}</p>
+                                        </div>
+                                        <button
+                                            onClick={() => handleRemoveMember(member.userId)}
+                                            className="text-red-600 hover:bg-red-50 p-2 rounded-md transition-colors"
+                                            title="Remove member"
+                                        >
+                                            <UserX className="w-5 h-5" />
+                                        </button>
+                                    </div>
+                                ))}
+                                {managingTeam.members.length === 0 && (
+                                    <div className="p-4 text-center text-slate-500">No members found</div>
+                                )}
+                            </div>
+                        </div>
                     </div>
                 </div>
             )}

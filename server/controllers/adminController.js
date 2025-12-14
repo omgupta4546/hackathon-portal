@@ -134,4 +134,83 @@ const deleteUser = async (req, res) => {
     }
 };
 
-module.exports = { getAllTeams, deleteTeam, updateSubmissionStatus, setWinner, getWinners, getAllUsers, deleteUser };
+
+const addMemberToTeam = async (req, res) => {
+    const { id } = req.params;
+    const { email } = req.body;
+
+    try {
+        const team = await Team.findById(id);
+        if (!team) return res.status(404).json({ message: 'Team not found' });
+
+        if (team.members.length >= team.maxMembers) {
+            return res.status(400).json({ message: 'Team is full' });
+        }
+
+        const user = await User.findOne({ email });
+        if (!user) return res.status(404).json({ message: 'User not found' });
+
+        // Check if user is already in a team
+        const existingTeam = await Team.findOne({ 'members.userId': user._id });
+        if (existingTeam) {
+            return res.status(400).json({ message: `User is already in team: ${existingTeam.name}` });
+        }
+
+        team.members.push({ userId: user._id, name: user.name, email: user.email });
+        await team.save();
+
+        res.json(team);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Error adding member' });
+    }
+};
+
+const removeMemberFromTeam = async (req, res) => {
+    const { id, userId } = req.params;
+
+    try {
+        const team = await Team.findById(id);
+        if (!team) return res.status(404).json({ message: 'Team not found' });
+
+        const memberIndex = team.members.findIndex(m => m.userId.toString() === userId);
+        if (memberIndex === -1) {
+            return res.status(404).json({ message: 'Member not found in team' });
+        }
+
+        // Leader logic
+        if (team.leaderUserId.toString() === userId) {
+            // If deleting the leader, assign new leader if possible
+            const remainingMembers = team.members.filter(m => m.userId.toString() !== userId);
+            if (remainingMembers.length > 0) {
+                team.leaderUserId = remainingMembers[0].userId;
+            } else {
+                // No members left? Plan said "assign next", if none, just empty?
+                // If we remove the LAST member (who is obviously leader), we just have an empty team.
+                // We should probably allow empty teams for admin manipulation.
+                // BUT Team model requires leaderUserId (required: true).
+                // So if no members left, we might have to delete the team or relax the constraint.
+                // The current model User.js doesn't say required, but Team.js says:
+                // leaderUserId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true }
+
+                // If removing the last member, we must delete the team or it stands invalid.
+                // Let's delete it to be safe and consistent with typical logic.
+                await Team.findByIdAndDelete(id);
+                // Also delete submissions
+                await Submission.deleteMany({ teamId: id });
+                return res.json({ message: 'Team deleted (no members left)' });
+            }
+        }
+
+        team.members.splice(memberIndex, 1);
+        await team.save();
+
+        res.json(team);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Error removing member' });
+    }
+};
+
+module.exports = { getAllTeams, deleteTeam, updateSubmissionStatus, setWinner, getWinners, getAllUsers, deleteUser, addMemberToTeam, removeMemberFromTeam };
+
