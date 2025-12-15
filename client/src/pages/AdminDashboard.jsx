@@ -441,17 +441,17 @@ const AdminDashboard = () => {
                                         </div>
                                         <div className="grid md:grid-cols-2 gap-4">
                                             <div>
-                                                <label className="text-sm font-medium">Start Date</label>
-                                                <input type="date" className="input-field"
-                                                    value={editingRound.startAt ? editingRound.startAt.split('T')[0] : ''}
-                                                    onChange={e => setEditingRound({ ...editingRound, startAt: e.target.value })}
+                                                <label className="text-sm font-medium">Start Date & Time</label>
+                                                <input type="datetime-local" className="input-field"
+                                                    value={editingRound.startAt ? new Date(new Date(editingRound.startAt).getTime() - (new Date().getTimezoneOffset() * 60000)).toISOString().slice(0, 16) : ''}
+                                                    onChange={e => setEditingRound({ ...editingRound, startAt: new Date(e.target.value).toISOString() })}
                                                 />
                                             </div>
                                             <div>
-                                                <label className="text-sm font-medium">End Date</label>
-                                                <input type="date" className="input-field"
-                                                    value={editingRound.endAt ? editingRound.endAt.split('T')[0] : ''}
-                                                    onChange={e => setEditingRound({ ...editingRound, endAt: e.target.value })}
+                                                <label className="text-sm font-medium">End Date & Time</label>
+                                                <input type="datetime-local" className="input-field"
+                                                    value={editingRound.endAt ? new Date(new Date(editingRound.endAt).getTime() - (new Date().getTimezoneOffset() * 60000)).toISOString().slice(0, 16) : ''}
+                                                    onChange={e => setEditingRound({ ...editingRound, endAt: new Date(e.target.value).toISOString() })}
                                                 />
                                             </div>
                                             <div className="md:col-span-2">
@@ -467,7 +467,7 @@ const AdminDashboard = () => {
                                             <h3 className="font-bold text-lg">{round.name}</h3>
                                             <p className="text-slate-600">{round.description}</p>
                                             <p className="text-sm text-red-500 mt-2">
-                                                {round.startAt ? new Date(round.startAt).toLocaleDateString() : 'TBA'} - {round.endAt ? new Date(round.endAt).toLocaleDateString() : 'TBA'}
+                                                {round.startAt ? new Date(round.startAt).toLocaleString() : 'TBA'} - {round.endAt ? new Date(round.endAt).toLocaleString() : 'TBA'}
                                             </p>
                                         </div>
                                         <button onClick={() => setEditingRound(round)} className="text-blue-600 hover:bg-blue-50 p-2 rounded"><Edit className="w-5 h-5" /></button>
