@@ -1,9 +1,17 @@
 const Team = require('../models/Team');
 const User = require('../models/User');
+const Round = require('../models/Round');
 const crypto = require('crypto');
 
 const createTeam = async (req, res) => {
     const { name, maxMembers } = req.body;
+
+    // Check if Phase 1 has ended
+    const round1 = await Round.findOne({ roundId: 'round1' });
+    if (round1 && round1.endAt && new Date() > round1.endAt) {
+        return res.status(400).json({ message: 'Phase 1 has ended. Team formation is closed.' });
+    }
+
     const userId = req.user._id;
 
     const existingTeam = await Team.findOne({ 'members.userId': userId });
@@ -26,6 +34,13 @@ const createTeam = async (req, res) => {
 
 const joinTeam = async (req, res) => {
     const { inviteCode } = req.body;
+
+    // Check if Phase 1 has ended
+    const round1 = await Round.findOne({ roundId: 'round1' });
+    if (round1 && round1.endAt && new Date() > round1.endAt) {
+        return res.status(400).json({ message: 'Phase 1 has ended. Team joining is closed.' });
+    }
+
     const userId = req.user._id;
 
     const existingTeam = await Team.findOne({ 'members.userId': userId });
