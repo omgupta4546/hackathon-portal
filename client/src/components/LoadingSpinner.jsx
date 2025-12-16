@@ -19,15 +19,6 @@ const LoadingSpinner = () => {
             <div className="mt-8 text-lg font-semibold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600 animate-pulse">
                 Loading...
             </div>
-            <style jsx>{`
-                @keyframes spin-reverse {
-                    from { transform: rotate(360deg); }
-                    to { transform: rotate(0deg); }
-                }
-                .animate-spin-reverse {
-                    animation: spin-reverse 1.5s linear infinite;
-                }
-            `}</style>
         </div>
     );
 };
