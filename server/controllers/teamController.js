@@ -21,11 +21,22 @@ const createTeam = async (req, res) => {
 
     const inviteCode = crypto.randomBytes(3).toString('hex').toUpperCase();
 
+    // Generate Team ID
+    let teamId = 'RB01';
+    const lastTeam = await Team.findOne({ teamId: { $exists: true } }).sort({ teamId: -1 });
+    if (lastTeam && lastTeam.teamId) {
+        const lastIdNum = parseInt(lastTeam.teamId.replace('RB', ''));
+        if (!isNaN(lastIdNum)) {
+            teamId = `RB${(lastIdNum + 1).toString().padStart(2, '0')}`;
+        }
+    }
+
     const team = await Team.create({
         name,
         leaderUserId: userId,
         members: [{ userId, name: req.user.name, email: req.user.email }],
         inviteCode,
+        teamId,
         maxMembers: maxMembers || 4,
     });
 
@@ -67,6 +78,22 @@ const getMyTeam = async (req, res) => {
     const team = await Team.findOne({ 'members.userId': req.user._id }).populate('problemId');
     if (!team) {
         return res.status(404).json({ message: 'No team found' });
+    }
+    if (!team.teamId) {
+        const lastTeam = await Team.findOne({ teamId: { $exists: true } }).sort({ teamId: -1 });
+        let newId = 'RB01';
+        if (lastTeam && lastTeam.teamId) {
+            const lastIdNum = parseInt(lastTeam.teamId.replace('RB', ''));
+            if (!isNaN(lastIdNum)) {
+                newId = `RB${(lastIdNum + 1).toString().padStart(2, '0')}`;
+            }
+        }
+        team.teamId = newId;
+        try {
+            await team.save();
+        } catch (error) {
+            console.error("Error auto-assigning teamId:", error);
+        }
     }
     res.json(team);
 };

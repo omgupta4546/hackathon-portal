@@ -168,9 +168,20 @@ const Dashboard = () => {
                                     (Share this code to invite members)
                                 </p>
                             </div>
-                            {!isRejected && (
-                                <button onClick={leaveTeam} className="text-red-500 text-sm hover:underline">Leave Team</button>
-                            )}
+                            <div className="flex flex-col items-end gap-2">
+                                {!isRejected && (
+                                    <button onClick={leaveTeam} className="text-red-400 text-xs hover:text-red-300 transition-colors uppercase tracking-wider font-semibold">
+                                        Leave Team
+                                    </button>
+                                )}
+                                {team.teamId && (
+                                    <div className="flex items-center space-x-2 bg-indigo-500/10 border border-indigo-500/20 px-3 py-1.5 rounded-lg shadow-lg shadow-indigo-500/5 backdrop-blur-sm">
+                                        <span className="text-indigo-400 text-xs font-bold uppercase tracking-wider">Team ID</span>
+                                        <div className="h-4 w-px bg-indigo-500/20"></div>
+                                        <span className="text-white font-mono font-bold text-base tracking-widest drop-shadow-md">{team.teamId}</span>
+                                    </div>
+                                )}
+                            </div>
                         </div>
 
                         <div className="mt-6">

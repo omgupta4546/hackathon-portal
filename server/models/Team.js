@@ -10,6 +10,7 @@ const teamSchema = new mongoose.Schema({
     }],
     inviteCode: { type: String, unique: true },
     logoUrl: { type: String },
+    teamId: { type: String, unique: true, sparse: true },
     problemId: { type: mongoose.Schema.Types.ObjectId, ref: 'Problem' },
     maxMembers: { type: Number, default: 4 },
     status: { type: String, default: 'active' },
