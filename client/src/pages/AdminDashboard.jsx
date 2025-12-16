@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import api, { BASE_URL } from '../utils/api';
 import toast from 'react-hot-toast';
-import { Download, Check, X, Trash2, Edit, Plus, Save, FileText, Info, Users, Briefcase, Layers, UserX, UserPlus, Shield, Bell } from 'lucide-react';
+import { Download, Check, X, Trash2, Edit, Plus, Save, FileText, Info, Users, Briefcase, Layers, UserX, UserPlus, Shield, Bell, AlertCircle } from 'lucide-react';
 import LoadingSpinner from '../components/LoadingSpinner';
 import AdminNotificationPanel from '../components/AdminNotificationPanel';
 
@@ -239,7 +239,7 @@ const AdminDashboard = () => {
             <h1 className="text-3xl font-bold text-white mb-8">Admin Dashboard</h1>
 
             {/* Stats Overview */}
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6 mb-8">
                 <div className="card flex items-center p-6">
                     <div className="rounded-full bg-blue-100 p-3 mr-4">
                         <Users className="w-8 h-8 text-blue-600" />
@@ -278,6 +278,18 @@ const AdminDashboard = () => {
                         <p className="text-sm text-slate-500 font-medium">Users w/o Team</p>
                         <h3 className="text-3xl font-bold text-red-800">
                             {users.length - Object.keys(userTeamMap).length}
+                        </h3>
+                    </div>
+                </div>
+
+                <div className="card flex items-center p-6">
+                    <div className="rounded-full bg-orange-100 p-3 mr-4">
+                        <AlertCircle className="w-8 h-8 text-orange-600" />
+                    </div>
+                    <div>
+                        <p className="text-sm text-slate-500 font-medium">Invalid Teams</p>
+                        <h3 className="text-3xl font-bold text-orange-800">
+                            {teams.filter(t => t.members.length < 2 || !t.problemId).length}
                         </h3>
                     </div>
                 </div>
