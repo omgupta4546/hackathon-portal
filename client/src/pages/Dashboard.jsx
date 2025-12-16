@@ -94,7 +94,7 @@ const Dashboard = () => {
     const isRound2Active = round2 && new Date() >= new Date(round2.startAt) && new Date() <= new Date(round2.endAt);
 
     // Locked if Phase 1 ended AND (team has no problemId OR team has < 2 members)
-    const isSelectionLocked = !isRound1Active && (!team.problemId || team.members.length < 2);
+    const isSelectionLocked = team && !isRound1Active && (!team.problemId || team.members.length < 2);
 
     return (
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -111,41 +111,51 @@ const Dashboard = () => {
             )}
 
             {!team ? (
-                <div className="grid md:grid-cols-2 gap-8">
-                    {/* Create Team */}
-                    <div className="card">
-                        <h2 className="text-xl font-bold mb-4 flex items-center"><Users className="mr-2 text-primary" /> Create a Team</h2>
-                        <p className="text-slate-300 mb-4">Start a new team and invite your friends.</p>
-                        <form onSubmit={createTeam} className="space-y-4">
-                            <input
-                                type="text"
-                                placeholder="Team Name"
-                                className="input-field"
-                                value={teamName}
-                                onChange={(e) => setTeamName(e.target.value)}
-                                required
-                            />
-                            <button type="submit" className="btn-primary w-full">Create Team</button>
-                        </form>
-                    </div>
+                isRound1Active ? (
+                    <div className="grid md:grid-cols-2 gap-8">
+                        {/* Create Team */}
+                        <div className="card">
+                            <h2 className="text-xl font-bold mb-4 flex items-center"><Users className="mr-2 text-primary" /> Create a Team</h2>
+                            <p className="text-slate-300 mb-4">Start a new team and invite your friends.</p>
+                            <form onSubmit={createTeam} className="space-y-4">
+                                <input
+                                    type="text"
+                                    placeholder="Team Name"
+                                    className="input-field"
+                                    value={teamName}
+                                    onChange={(e) => setTeamName(e.target.value)}
+                                    required
+                                />
+                                <button type="submit" className="btn-primary w-full">Create Team</button>
+                            </form>
+                        </div>
 
-                    {/* Join Team */}
-                    <div className="card">
-                        <h2 className="text-xl font-bold mb-4 flex items-center"><Users className="mr-2 text-accent" /> Join a Team</h2>
-                        <p className="text-slate-300 mb-4">Enter an invite code to join an existing team.</p>
-                        <form onSubmit={joinTeam} className="space-y-4">
-                            <input
-                                type="text"
-                                placeholder="Invite Code"
-                                className="input-field"
-                                value={inviteCode}
-                                onChange={(e) => setInviteCode(e.target.value)}
-                                required
-                            />
-                            <button type="submit" className="btn-secondary w-full">Join Team</button>
-                        </form>
+                        {/* Join Team */}
+                        <div className="card">
+                            <h2 className="text-xl font-bold mb-4 flex items-center"><Users className="mr-2 text-accent" /> Join a Team</h2>
+                            <p className="text-slate-300 mb-4">Enter an invite code to join an existing team.</p>
+                            <form onSubmit={joinTeam} className="space-y-4">
+                                <input
+                                    type="text"
+                                    placeholder="Invite Code"
+                                    className="input-field"
+                                    value={inviteCode}
+                                    onChange={(e) => setInviteCode(e.target.value)}
+                                    required
+                                />
+                                <button type="submit" className="btn-secondary w-full">Join Team</button>
+                            </form>
+                        </div>
                     </div>
-                </div>
+                ) : (
+                    <div className="card text-center py-12">
+                        <Lock className="w-16 h-16 mx-auto text-slate-500 mb-4" />
+                        <h2 className="text-2xl font-bold text-white mb-2">Phase 1 has Ended</h2>
+                        <p className="text-slate-400 max-w-md mx-auto">
+                            Unfortunately, Phase 1 is closed. You can no longer create or join a team.
+                        </p>
+                    </div>
+                )
             ) : (
                 <div className="space-y-8">
                     {/* Team Info */}
