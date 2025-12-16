@@ -93,6 +93,9 @@ const Dashboard = () => {
     const round2 = rounds.find(r => r.roundId === 'round2');
     const isRound2Active = round2 && new Date() >= new Date(round2.startAt) && new Date() <= new Date(round2.endAt);
 
+    // Locked if Phase 1 ended AND (team has no problemId OR team has < 2 members)
+    const isSelectionLocked = !isRound1Active && (!team.problemId || team.members.length < 2);
+
     return (
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
             <h1 className="text-3xl font-bold text-white mb-8">Welcome, {user.name}</h1>
@@ -224,6 +227,18 @@ const Dashboard = () => {
                         {isRejected ? (
                             <div className="bg-slate-50 p-4 rounded-lg text-center text-slate-500">
                                 <p>Submissions are closed for rejected teams.</p>
+                            </div>
+                        ) : isSelectionLocked ? (
+                            <div className="bg-red-50 border border-red-200 p-4 rounded-lg text-center text-red-600">
+                                <p className="flex items-center justify-center font-bold">
+                                    <Lock className="w-4 h-4 mr-2" />
+                                    Locked: Phase 1 Incomplete
+                                </p>
+                                <p className="text-sm mt-1">
+                                    {!team.problemId
+                                        ? "You did not select a problem statement before Phase 1 ended."
+                                        : "Minimum 2 team members required to participate."}
+                                </p>
                             </div>
                         ) : isRound2Active ? (
                             <div className="flex items-center justify-between bg-slate-50 p-4 rounded-lg">

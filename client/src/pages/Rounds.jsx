@@ -52,6 +52,14 @@ const Rounds = () => {
         }
 
         if (roundId === 'round2') {
+            const round1 = rounds.find(r => r.roundId === 'round1');
+            const isRound1Ended = round1 && now > new Date(round1.endAt);
+
+            // Disqualified if Phase 1 ended AND (no problem selected OR < 2 members)
+            if (isRound1Ended && (!myTeam.problemId || myTeam.members.length < 2)) {
+                return { state: 'locked', label: 'Locked (Phase 1 Incomplete)', color: 'border-l-red-500' };
+            }
+
             if (!myTeam.problemId) return { state: 'locked', label: 'Locked', color: 'border-l-slate-300' };
 
             const round = rounds.find(r => r.roundId === 'round2');
